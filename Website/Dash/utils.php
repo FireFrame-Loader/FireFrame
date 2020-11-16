@@ -5,10 +5,7 @@ require 'mysqli_wrapper.php';
 $connection = new mysqli_wrapper('localhost','admin','Osmakdegu123456789#','fireframe');
 
 function is_onion() {
-    $http_host = $_SERVER['HTTP_HOST'];
-    if ($http_host == "etqz5veooa2zlcftxzkbxs6k4kvcbyqfuiq7uesxspwikcwzxamnzsyd.onion")
-        return true;
-    return false;
+    return $_SERVER['HTTP_HOST'] === 'etqz5veooa2zlcftxzkbxs6k4kvcbyqfuiq7uesxspwikcwzxamnzsyd.onion';
 }
 
 function process_link($add,$dash) {
@@ -28,10 +25,8 @@ function start_session() {
 }
 
 function check_login() {
-    if (isset($_SESSION['logged_in']) && (bool)$_SESSION['logged_in'] && $_SESSION['user_agent'] === $_SERVER['HTTP_USER_AGENT']) {
-
-    } else {
-        header("Location: " . process_link("login.php",true));
+    if(!isset($_SESSION['logged_in']) || !$_SESSION['logged_in'] && $_SESSION['user_agent'] !== $_SERVER['HTTP_USER_AGENT']){
+        header('Location: ' . process_link('login.php', true));
         die('invalid login');
     }
 }
