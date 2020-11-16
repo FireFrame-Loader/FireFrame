@@ -1,24 +1,19 @@
 <?php
 require 'functions/includes.php';
 
-if(isset($_POST['username'], $_POST['password'])){
-    $data = auth\owner_login($connection, $_POST['username'], $_POST['password']);
+if(isset($_POST['username'], $_POST['password'], $_POST['confirmpassword'])){
+    if($_POST['password'] !== $_POST['confirmpassword'])
+        die('password is different from confirm password');
 
-    if(!is_array($data)){
-        die('Wrong credentials');
-    }
+    $code = \auth\owner_register($connection, $_POST['username'], $_POST['password']);
 
-    $_SESSION['username'] = $data['username'];
+    $message = response_switcher($code);
 
-    $_SESSION['expires'] = $data['expires'];
-
-    $_SESSION['user_agent'] = $data['user_agent'];
-
-    header("Location: " . process_link('index.php', true));
+    die($message);
 }
 
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -54,25 +49,33 @@ background-size: auto;
     </div>
   </nav>
 
-    <div class="container h-100 d-flex justify-content-center mt-5 pt-5">
-       <div class="col-lg-4 pt-5">
+    <div class="container h-100 d-flex justify-content-center mt-5 pt-5 ">
+        <div class="col-lg-4 pt-5">
+        <div class="alert alert-dismissible alert-warning">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Registrations are currently disabled!</strong>
+                  </div>
             <div class="card rounded-0 text-white bg-dark">
                 <div class="card-header">
-                Login
+                Register
                 </div>
                 <form method="POST" class="p-3">
                     <div class="form-group">
                     <label>Username</label>
-                    <input type="text" class="form-control" id="username" name="username" aria-describedby="emailHelp" placeholder="Username" required>
+                    <input type="text" class="form-control" id="username" name="username" aria-describedby="emailHelp" placeholder="Username" disabled required>
                     </div>
                     <div class="form-group">
                     <label>Password</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" disabled required>
+                    </div>
+                    <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmpassword" name="confirmpassword" placeholder="Confirm Password" disabled required>
                     </div>
                     <center>
-                        <button type="submit" class="btn btn-light border w-100 mt-2 mb-2">Login</button>
+                        <button type="submit" class="btn btn-light border w-100 mt-2 mb-2" disabled>Register</button>
                         <?php 
-                            echo '<a href="' . process_link("register.php", false) . '" class="text-right">No Account?</a>'; 
+                            echo '<a href="' . process_link("login.php", true) . '" class="text-right">Already registered?</a>'; 
                         ?>
                     </center>
                 </form>
