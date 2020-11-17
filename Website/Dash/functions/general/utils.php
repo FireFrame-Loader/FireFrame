@@ -7,9 +7,11 @@ function is_onion() {
 }
 
 function process_link($add, $dash) {
-    if(is_onion())
+    if(is_onion()) {
         return 'http://etqz5veooa2zlcftxzkbxs6k4kvcbyqfuiq7uesxspwikcwzxamnzsyd.onion/' . ($dash ? 'dash/' : '') . $add;
+    }
 
+    //return 'http://localhost/' . ($dash ? 'dash/' : '') . $add;
     return 'https://firefra.me/' . ($dash ? 'dash/' : '') . $add;
 }
 
@@ -22,16 +24,24 @@ function validate_password($password) {
     return ($upper_case && $lower_case && $number && $special_chars && strlen($password) >= 8);
 }
 
-function response_switcher($code){
-    switch($code){
-        case 0:
-            return 'invalid username';
-
-        case 1:
-            return 'invalid password';
-
-        case 2:
-            return 'success';
+function rnd_string_secure($length){
+    $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $pieces = [];
+    $max = mb_strlen($keyspace, '8bit') - 1;
+    for ($i = 0; $i < $length; ++$i) {
+        $pieces []= $keyspace[random_int(0, $max)];
     }
+    return implode('', $pieces);
 }
 
+function check_expiry($expiry){
+    if($expiry === null) {
+        return false;
+    }
+
+    return ($expiry > time() || $expiry === -1);
+}
+
+function contains($needle, $haystack){
+    return strpos($haystack, $needle) !== false;
+}

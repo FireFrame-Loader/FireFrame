@@ -1,5 +1,6 @@
 <?php
 require 'functions/includes.php';
+require 'functions/session.php';
 
 if(isset($_POST['username'], $_POST['password'])){
     $data = auth\owner_login($connection, $_POST['username'], $_POST['password']);

@@ -2,14 +2,17 @@
 require 'functions/includes.php';
 
 if(isset($_POST['username'], $_POST['password'], $_POST['confirmpassword'])){
-    if($_POST['password'] !== $_POST['confirmpassword'])
+    if($_POST['password'] !== $_POST['confirmpassword']) {
         die('password is different from confirm password');
+    }
 
     $code = \auth\owner_register($connection, $_POST['username'], $_POST['password']);
 
-    $message = response_switcher($code);
+    if($code !== 2){
+        die('invalid password \'regex\' or already used name');
+    }
 
-    die($message);
+    header('Location: login.php');
 }
 
 ?>

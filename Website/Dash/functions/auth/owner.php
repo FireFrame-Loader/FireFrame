@@ -10,13 +10,11 @@ use mysqli_wrapper;
  */
 
 function owner_login(mysqli_wrapper $connection, $username, $password){
-    $query = $connection->query('SELECT * FROM users WHERE username=? LIMIT 1', [$username]);
+    $row_data = owner_fetch($connection, $username);
 
-    if($query->num_rows === 0) {
+    if($row_data === 0){
         return 0;
     }
-
-    $row_data = $query->fetch_assoc();
 
     if(!password_verify($password, $row_data['password'])) {
         return 1;
@@ -29,9 +27,9 @@ function owner_login(mysqli_wrapper $connection, $username, $password){
     );
 }
 
-function owner_register(mysqli_wrapper $connection, $username, $password){
+function owner_register($connection, $username, $password){
     $owner_already_exists = static function($username) use ($connection) {
-        $query = $connection->query('SELECT username FROM users WHERE username=?', [$username]);
+        $query = $connection->query('SELECT username FROM users WHERE username=? LIMIT 1', [$username]);
 
         return $query->num_rows >= 1;
     };
