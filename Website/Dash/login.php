@@ -9,11 +9,7 @@ if(isset($_POST['username'], $_POST['password'])){
         die('Wrong credentials');
     }
 
-    $_SESSION['username'] = $data['username'];
-
-    $_SESSION['expires'] = $data['expires'];
-
-    $_SESSION['user_agent'] = $data['user_agent'];
+    $_SESSION = $data;
 
     header("Location: " . process_link('index.php', true));
 }
