@@ -16,15 +16,24 @@ if (!isset($_POST['command'])) {
 
 $command = $_POST['command'];
 
+if ($command === 'request_public_key') {
+    die(json_encode([
+        'error' => false,
+        'data' => file_get_contents('/var/www/html/api.firefra.me/public_key.crt') //change extension if needed when we generate the actual key.
+    ])); 
+}
+
+if (!isset($_POST['data'])) {
+    die(json_encode([
+        'error' => true,
+        'type' => 'no_command_data_sent'
+    ]));
+}
+
+$data = json_decode($_POST['data']);
+
 switch ($command) {
-    case 'request_public_key':
-        die(json_encode([
-            'error' => false,
-            'data' => file_get_contents('/var/www/html/api.firefra.me/public_key.crt') //change extension if needed when we generate the actual key.
-        ])); 
-    break;
     case 'handshake_init':
-        
     break;
     default:
     die(json_encode([
