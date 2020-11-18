@@ -8,13 +8,9 @@ session_start(['use_strict_mode' => 1,
         'cookie_secure' => 1,
         'cookie_httponly' => 1]);
 
-function session_check($session = null) {
+function session_valid($session = null) {
     if($session === null) {
         $session = $_SESSION;
     }
-
-    if(!isset($session['username']) || $session['user_agent'] !== $_SERVER['HTTP_USER_AGENT']){
-        header('Location: ' . process_link('login.php', false));
-        die('invalid login');
-    }
+    return (isset($session['username']) && $session['user_agent'] === $_SERVER['HTTP_USER_AGENT']);
 }

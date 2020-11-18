@@ -42,6 +42,20 @@ function check_expiry($expiry){
     return ($expiry > time() || $expiry === -1);
 }
 
+function get_account_type($expiry, $username = null){
+    if($username !== null && $username === 'pest03'  || $username === "denny" || $username === "21dogs" || $username === "FinGu") {
+        return 'Admin'; // TODO : create admin row in the user's table
+    }
+
+    if(!check_expiry($expiry)) {
+        return 'Normal';
+    }
+
+    return 'Premium';
+}
+
 function contains($needle, $haystack){
     return strpos($haystack, $needle) !== false;
 }
+
+

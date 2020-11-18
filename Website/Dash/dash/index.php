@@ -4,7 +4,10 @@ require '../functions/session.php';
 
 session_regenerate_id();
 
-session_check();
+if(!session_valid()) {
+    header('Location: ' . process_link('login.php', false));
+    die('invalid login');
+}
 
 $username = $_SESSION['username'];
 
