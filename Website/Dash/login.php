@@ -3,7 +3,7 @@ require 'functions/includes.php';
 require 'functions/session.php';
 
 if(session_valid()){
-    header('Location: ' . process_link('index.php', true)));
+    header('Location: ' . process_link('index.php', true));
 }
 
 if(isset($_POST['username'], $_POST['password'])){
