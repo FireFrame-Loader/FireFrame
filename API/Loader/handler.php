@@ -33,7 +33,13 @@ if (!isset($_POST['data'])) {
 $data = json_decode($_POST['data']);
 
 switch ($command) {
-    case 'handshake_init':
+    case 'create_session':
+        $aes_key = $data->aes_key; //TODO: Decrypt the aes key with RSA private key
+        $session = create_session($aes_key); 
+        die(json_encode([
+            'error' => true,
+            'data' => json_encode($session)
+        ]));
     break;
     default:
     die(json_encode([
