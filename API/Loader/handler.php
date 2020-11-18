@@ -48,12 +48,6 @@ switch ($command) {
         $auth_data = is_valid_user($request_data->username,$request_data->password,$request_data->hwid,$request_data->loader_key);
 
         switch ($auth_data) {
-            case 0: 
-                die(json_encode([
-                    'error' => true,
-                    'type' => 'user_doesnt_exist'
-                ]));
-            break;
             case 1:
                 die(json_encode([
                     'error' => true,
