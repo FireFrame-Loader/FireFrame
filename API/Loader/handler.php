@@ -35,11 +35,46 @@ $data = json_decode($_POST['data']);
 switch ($command) {
     case 'create_session':
         $aes_key = $data->aes_key; //TODO: Decrypt the aes key with RSA private key
-        $session = create_session($aes_key); 
-        die(json_encode([
-            'error' => true,
+        $session = create_session($aes_key);
+        die(json_encode([ //TODO: Encrypt with $aes_key
+            'error' => false,
             'data' => json_encode($session)
         ]));
+    break;
+    case 'login': 
+        $session_key = get_session_key_from_id($data->session_id);
+        $request_data = json_decode($data->data); //TODO: Decrypt $data->data with $session_key
+
+        $auth_data = is_valid_user($request_data->username,$request_data->password,$request_data->hwid,$request_data->loader_key);
+
+        switch ($auth_data) {
+            case 0: 
+                die(json_encode([
+                    'error' => true,
+                    'type' => 'user_doesnt_exist'
+                ]));
+            break;
+            case 1:
+                die(json_encode([
+                    'error' => true,
+                    'type' => 'invalid_login_details'
+                ]));
+             break;
+            case 2: 
+                die(json_encode([
+                    'error' => true,
+                    'type' => 'invalid_hwid'
+                ]));
+            break;
+            default:
+                add_session_db_identifiers($data->session_id,$request_data->username,$request_data->loader_key);
+                die(json_encode([ //Encrypt with $session_key
+                    'error' => false,
+                    'data' => json_encode($auth_data)
+                ]));
+             break;
+        }
+
     break;
     default:
     die(json_encode([

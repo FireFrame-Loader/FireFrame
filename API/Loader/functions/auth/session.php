@@ -10,5 +10,13 @@ function generate_session($aes_key) {
            ];
 }
 
+function get_session_key_from_id($session_id) {
+
+}
+
+function add_session_db_identifiers($session_id,$username,$loader_key) {
+    
+}
+
 
 ?>
