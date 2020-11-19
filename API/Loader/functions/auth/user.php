@@ -72,6 +72,11 @@ function insert_new_user($username,$password,$hwid,$license,$loader_key) {
 
     $connection->query('INSERT INTO loader_users(username,password,hwid,usergroup,expires,loader_key,owner) VALUES(?,?,?,?,?,?,?)',[$username,$password,$hwid,$license_info['usergroup'],$expires,$loader_key,$owner]);
 
+    return [
+        'usergroup' => $license_info['usergroup'],
+        'expires' => $expires
+    ];
+
 }
 
 ?>

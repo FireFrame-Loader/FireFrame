@@ -113,9 +113,10 @@ switch ($command) {
                 ]));
              break;
             default:
+                add_session_db_identifiers($data->session_id,$request_data->username,$request_data->loader_key);
                 die(json_encode([
                     'error' => false,
-                    'type' => 'successfully_registered'
+                    'data' => json_encode($register_data)
                 ]));
              break;
         }

@@ -22,5 +22,8 @@ function add_session_db_identifiers($session_id,$username,$loader_key) {
     $connection->query('UPDATE loader_sessions SET loader_key=? WHERE session_id=?',[$loader_key,$session_id]);
 }
 
+function destroy_session($session_id,$loader_key) {
+    $connection->query('DELETE FROM loader_sessions WHERE session_id=? AND loader_key=?',[$session_id,$loader_key]);
+}
 
 ?>

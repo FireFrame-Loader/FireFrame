@@ -13,17 +13,13 @@ function get_license_info($license,$loader_key,$owner) {
         return 0;
 
     $row_data = $query->fetch_assoc();
-    
-    $info = [
-        'usergroup' => $row_data['usergroup'],
-        'duration' => $row_data['duration']
-    ];
 
     $connection->query('DELETE FROM loader_licenses WHERE code=? AND owner=? AND loader_key=?',[$license,$owner,$loader_key]);
 
-    return $info;
-
-
+    return [
+        'usergroup' => $row_data['usergroup'],
+        'duration' => $row_data['duration']
+    ];
 }
 
 ?>
