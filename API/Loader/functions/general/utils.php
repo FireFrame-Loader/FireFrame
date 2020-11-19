@@ -13,5 +13,13 @@ function rnd_string_secure($length){
     return implode('', $pieces);
 }
 
+function sign_message($message) {
+    putenv('GNUPGHOME=/var/www/.gnupg');
+    $gpg = new gnupg();
+    $gpg->addsignkey('E7024416A6B8C327A0D75188C6BBA999B2D601AD');
+
+    return $gpg->sign($message);
+}
+
 
 ?>
