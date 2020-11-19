@@ -1,6 +1,6 @@
 <?php
 
-use function auth\owner\ogin;
+use function auth\owner\login;
 
 require '../functions/includes.php';
 require '../functions/session.php';
