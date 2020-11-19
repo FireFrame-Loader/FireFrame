@@ -87,7 +87,38 @@ switch ($command) {
 
         $register_data = insert_new_user($request_data->username,$request_data->password,$request_data->hwid,$request_data->license,$request_data->loader_key);
 
-
+        switch ($register_data) {
+            case 0:
+                die(json_encode([
+                    'error' => true,
+                    'type' => 'loader_doesnt_exist'
+                ]));
+             break;
+            case 1:
+                die(json_encode([
+                    'error' => true,
+                    'type' => 'loader_expired'
+                ]));
+             break;
+            case 2:
+                die(json_encode([
+                    'error' => true,
+                    'type' => 'user_already_exists'
+                ]));
+             break;
+            case 3:
+                die(json_encode([
+                    'error' => true,
+                    'type' => 'invalid_license'
+                ]));
+             break;
+            default:
+                die(json_encode([
+                    'error' => false,
+                    'type' => 'successfully_registered'
+                ]));
+             break;
+        }
 
     break;
     default:
