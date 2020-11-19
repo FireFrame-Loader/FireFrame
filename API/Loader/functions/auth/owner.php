@@ -7,17 +7,15 @@
 
 */
 
-function is_loader_expired($owner) {
+function is_loader_expired($connection, $owner) {
     $query = $connection->query('SELECT expires FROM users WHERE username=? LIMIT 1', [$owner]);
 
     $expires = $query->fetch_assoc()['expires'];
 
-    if ($expires > time())
-        return false;
-    return true;
+    return time() > $expires;
 }
 
-function get_loader_owner($loader_key) {
+function get_loader_owner($connection, $loader_key) {
     $query = $connection->query('SELECT owner FROM loaders WHERE loader_key=? LIMIT 1',[$loader_key]);
     
     if ($query->num_rows === 0)
@@ -25,7 +23,7 @@ function get_loader_owner($loader_key) {
 
     $owner = $query->fetch_assoc()['owner'];
 
-    if (is_loader_expired($owner))
+    if (is_loader_expired($connection, $owner))
         return 1;
     
     return $owner;

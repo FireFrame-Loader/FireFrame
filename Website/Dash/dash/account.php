@@ -1,6 +1,6 @@
 <?php
 
-use function auth\owner_login;
+use function auth\owner\ogin;
 
 require '../functions/includes.php';
 require '../functions/session.php';
@@ -22,7 +22,7 @@ if (isset($_POST['options']) || isset($_POST['options1']))  {
     header("Location: https://shoppy.gg/product/E8y0550");
 }
 
-$expiry = auth\owner_fetch($connection, $username)['expires'];
+$expiry = auth\owner\fetch($connection, $username)['expires'];
 
 $account_type = get_account_type($expiry, $username);
 
@@ -50,13 +50,13 @@ if(isset($_POST['oldpassword'], $_POST['newpassword'], $_POST['confirmpassword']
         die('your password and confirmation password don\'t match');
     }
 
-    $code = auth\owner_change_password($connection, $username, $_POST['oldpassword'], $_POST['newpassword']);
+    $code = auth\owner\change_password($connection, $username, $_POST['oldpassword'], $_POST['newpassword']);
 
     die($code_switcher($code));
 }
 
 if (isset($_POST['confirmdelpassword'])) {
-    $code = auth\owner_delete_account($connection, $username, $_POST['confirmdelpassword']);
+    $code = auth\owner\delete_account($connection, $username, $_POST['confirmdelpassword']);
 
     if($code !== 2) {
         die($code_switcher($code));
@@ -67,7 +67,7 @@ if (isset($_POST['confirmdelpassword'])) {
 }
 
 if(isset($_POST['subkey'])) {
-    $code = auth\owner_activate_license($connection, $username, $_POST['subkey']);
+    $code = auth\owner\activate_license($connection, $username, $_POST['subkey']);
 
     die($code_switcher($code));
 }

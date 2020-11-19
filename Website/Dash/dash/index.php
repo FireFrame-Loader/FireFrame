@@ -11,7 +11,7 @@ if(!session_valid()) {
 
 $username = $_SESSION['username'];
 
-$loader = loader\fetch_loader($connection, $username);
+$loader = loader\fetch($connection, $username);
 
 if ($loader !== 0)
     $_SESSION['loader'] = $loader;
@@ -39,14 +39,14 @@ $code_switcher = static function($code){
 };
 
 if(isset($_POST['create_loader'])) {
-    $out = loader\create_loader($connection, $_POST['loader_name'], $username);
+    $out = loader\create($connection, $_POST['loader_name'], $username);
 
     die($code_switcher($out));
 }
 
 
 if(isset($_POST['process'], $_POST['name'], $_POST['groups'])){
-    $out = module\update_module($connection, $_FILES['file'], $loader, $_POST['name'], $_POST['process'], $_POST['groups']);
+    $out = module\upload($connection, $_FILES['file'], $loader, $_POST['name'], $_POST['process'], $_POST['groups']);
 
     die($code_switcher($out));
 }
@@ -143,38 +143,38 @@ background-size: auto;
                                 <label for="loader_name">Loader Name</label>
                                 <input type="text" class="form-control" id="loader_name" name="loader_name" aria-describedby="poo" placeholder="<?= $loader['name'] ?>" required>
                             </div>
-                            <!-- <button type="submit" class="btn btn-primary">Rename</button> -->
-                        </form>
-                    </div>
-                    <div class="col-md mr-2">
-                        <form method="POST" enctype="multipart/form-data" class="p-3">
-                            <div class="form-group">
-                                <label>Add Loader Modules</label>
-                                <input type="text" class="form-control" id="name" name="name" aria-describedby="poo" placeholder="Module Name" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="process" name="process" aria-describedby="poo" placeholder="Injection Process (csgo.exe)" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="groups" name="groups" aria-describedby="poo" placeholder="Allowed Groups (Default,VIP)" required>
-                            </div>
-                            <div class="form-group">
-                                <div class="custom-file mt-3">
-                                    <input type="hidden" name="MAX_FILE_SIZE" value="8388608"/>
-                                    <input type="file" class="custom-file-input" accept=".dll" id="file" name="file" required>
-                                    <label class="custom-file-label" for="file">Choose file...</label>
+                                <!-- <button type="submit" class="btn btn-primary">Rename</button> -->
+                            </form>
+                        </div>
+                        <div class="col-md mr-2">
+                            <form method="POST" enctype="multipart/form-data" class="p-3">
+                                <div class="form-group">
+                                    <label>Add Loader Modules</label>
+                                    <input type="text" class="form-control" id="name" name="name" aria-describedby="poo" placeholder="Module Name" required>
                                 </div>
-                            </div>
-                            <small class="text-secondary">Maximum module size: 8MB!<br>
-                                It is recommended to pack your module with software like VMProtect or Themida as we support these!<br>
-                                You can assign multiple groups to a module by separating the group names with a comma(,)<br>
-                                Your module will be stored encrypted!</small>
-                            <br>
-                            <button type="submit" class="btn btn-primary mt-2">Upload</button>
-                        </form>
-                    </div> <?php } ?>               </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="process" name="process" aria-describedby="poo" placeholder="Injection Process (csgo.exe)" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="groups" name="groups" aria-describedby="poo" placeholder="Allowed Groups (Default,VIP)" required>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-file mt-3">
+                                        <input type="hidden" name="MAX_FILE_SIZE" value="8388608"/>
+                                        <input type="file" class="custom-file-input" accept=".dll" id="file" name="file" required>
+                                        <label class="custom-file-label" for="file">Choose file...</label>
+                                    </div>
+                                </div>
+                                <small class="text-secondary">Maximum module size: 8MB!<br>
+                                    It is recommended to pack your module with software like VMProtect or Themida as we support these!<br>
+                                    You can assign multiple groups to a module by separating the group names with a comma(,)<br>
+                                    Your module will be stored encrypted!</small>
+                                <br>
+                                <button type="submit" class="btn btn-primary mt-2">Upload</button>
+                            </form>
+                        </div> <?php } ?>               </div>
+            </div>
         </div>
-    </div>
 </div>
 <footer class="page-footer font-small dark text-light bg-dark fixed-bottom">
     <div class="footer-copyright text-center py-3">© <?php echo date("Y");?> FireFrame</div>

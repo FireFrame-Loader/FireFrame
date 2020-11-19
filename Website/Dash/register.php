@@ -6,7 +6,7 @@ if(isset($_POST['username'], $_POST['password'], $_POST['confirmpassword'])){
         die('password is different from confirm password');
     }
 
-    $code = \auth\owner_register($connection, $_POST['username'], $_POST['password']);
+    $code = auth\owner\register($connection, $_POST['username'], $_POST['password']);
 
     if($code !== 2){
         die('invalid password \'regex\' or already used name');

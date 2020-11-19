@@ -7,7 +7,7 @@ if(session_valid()){
 }
 
 if(isset($_POST['username'], $_POST['password'])){
-    $data = auth\owner_login($connection, $_POST['username'], $_POST['password']);
+    $data = auth\owner\login($connection, $_POST['username'], $_POST['password']);
 
     if(!is_array($data)){
         die('Wrong credentials');

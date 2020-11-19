@@ -3,7 +3,8 @@ $dir = __DIR__ . '/';
 
 $dirs = array(
     $dir.'general/*.php',
-    $dir.'auth/*.php',
+    $dir.'auth/owner/*.php',
+    $dir.'auth/user/*.php',
     $dir.'loader/*.php',
     $dir.'module/*.php'
 );

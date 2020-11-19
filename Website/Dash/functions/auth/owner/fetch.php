@@ -1,7 +1,7 @@
 <?php
-namespace auth;
+namespace auth\owner;
 
-function owner_fetch($connection, $username){
+function fetch($connection, $username){
     $query = $connection->query('SELECT * FROM users WHERE username=? LIMIT 1', [$username]);
 
     if($query->num_rows === 0) {

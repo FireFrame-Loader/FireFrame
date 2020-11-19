@@ -3,7 +3,7 @@ namespace module;
 
 use encryption;
 
-function update_module($connection, $file, $loader, $module_name, $target_process, $groups){
+function upload($connection, $file, $loader, $module_name, $target_process, $groups){
     $server_name = rnd_string_secure(32).'.dll';
 
     $server_key = rnd_string_secure(64);

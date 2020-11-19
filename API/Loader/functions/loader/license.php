@@ -7,8 +7,9 @@ namespace loader;
 
 */
 
-function get_license_info($license,$loader_key,$owner) {
+function get_license_info($connection, $license,$loader_key,$owner) {
     $query = $connection->query('SELECT * loader_licenses WHERE code=? AND owner=? AND loader_key=?',[$license,$owner,$loader_key]);
+
     if ($query->num_rows === 0)
         return 0;
 

@@ -1,5 +1,7 @@
 <?php
 
+//TODO : include functions
+
 if($_SERVER['HTTP_USER_AGENT'] !== '#F1R3FR4M3L04D3R#'){
     die(json_encode([
         'error' => true,
@@ -34,17 +36,17 @@ $data = json_decode($_POST['data']);
 switch ($command) {
     case 'create_session':
         $aes_key = $data->aes_key; //TODO: Decrypt the aes key with RSA private key
-        $session = create_session($aes_key);
+        $session = auth\generate_session($connection, $aes_key);
         die(json_encode([ //TODO: Encrypt with $aes_key
             'error' => false,
             'data' => json_encode($session)
         ]));
     break;
     case 'login': 
-        $session_key = get_session_from_id($data->session_id, false);
+        $session_key = auth\get_session_from_id($connection, $data->session_id, false);
         $request_data = json_decode($data->data); //TODO: Decrypt $data->data with $session_key
 
-        $auth_data = is_valid_user($request_data->username,$request_data->password,$request_data->hwid,$request_data->loader_key);
+        $auth_data = auth\is_valid_user($connection, $request_data->username, $request_data->password, $request_data->hwid, $request_data->loader_key);
 
         switch ($auth_data) {
             case 1:
@@ -52,7 +54,7 @@ switch ($command) {
                     'error' => true,
                     'type' => 'invalid_login_details'
                 ]));
-             break;
+             break; //TODO : remove break
             case 2: 
                 die(json_encode([
                     'error' => true,
@@ -72,7 +74,7 @@ switch ($command) {
                 ]));
             break;
             default:
-                add_session_db_identifiers($data->session_id,$request_data->username,$request_data->loader_key);
+                auth\add_session_db_identifiers($connection, $data->session_id,$request_data->username,$request_data->loader_key);
                 die(json_encode([ //Encrypt with $session_key
                     'error' => false,
                     'data' => json_encode($auth_data)
@@ -82,10 +84,10 @@ switch ($command) {
 
     break;
     case 'register':
-        $session_key = get_session_from_id($data->session_id,false);
+        $session_key = auth\get_session_from_id($connection, $data->session_id,false);
         $request_data = json_decode($data->data); //TODO: Decrypt $data->data with $session_key
 
-        $register_data = insert_new_user($request_data->username,$request_data->password,$request_data->hwid,$request_data->license,$request_data->loader_key);
+        $register_data = auth\insert_new_user($connection, $request_data->username,$request_data->password,$request_data->hwid,$request_data->license,$request_data->loader_key);
 
         switch ($register_data) {
             case 0:
@@ -113,7 +115,7 @@ switch ($command) {
                 ]));
              break;
             default:
-                add_session_db_identifiers($data->session_id,$request_data->username,$request_data->loader_key);
+                auth\add_session_db_identifiers($connection, $data->session_id,$request_data->username,$request_data->loader_key);
                 die(json_encode([
                     'error' => false,
                     'data' => json_encode($register_data)

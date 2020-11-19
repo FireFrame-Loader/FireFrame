@@ -9,19 +9,19 @@ namespace loader;
  * 4 = 8mb max
  */
 
-use function auth\owner_fetch;
+use auth;
 
 function loader_key_structure(){
    return rnd_string_secure(3) . '-' . rnd_string_secure(3) . '-' . rnd_string_secure(3);
 }
 
-function create_loader($connection, $loader_name, $username){
+function create($connection, $loader_name, $username){
 
     //TODO : restrict loader amount
 
     $loader_name = htmlentities($loader_name);
 
-    $user_data = owner_fetch($connection, $username);
+    $user_data = auth\owner\fetch($connection, $username);
 
     if($user_data === 0 || !check_expiry($user_data['expires']) ){
         return 1;

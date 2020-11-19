@@ -32,7 +32,7 @@ namespace loader;
  */
 
 
-function fetch_loader($connection, $username){
+function fetch($connection, $username){
     $query = $connection->query('SELECT * FROM loaders WHERE owner=?', [$username]);
 
     if($query->num_rows === 0) {

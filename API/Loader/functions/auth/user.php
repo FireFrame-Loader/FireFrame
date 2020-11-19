@@ -9,12 +9,14 @@ namespace auth;
 4 - loader expired
 */
 
-function is_valid_user($username,$password,$hwid,$loader_key) {
-    $owner = \get_loader_owner($loader_key);
+use function loader\get_license_info;
+
+function is_valid_user($connection, $username, $password, $hwid, $loader_key) {
+    $owner = \get_loader_owner($connection, $loader_key);
 
     if ($owner === 0)
         return 3;
-
+//NIGGA WHAT
     if ($owner === 1)
         return 4;
 
@@ -48,7 +50,7 @@ function is_valid_user($username,$password,$hwid,$loader_key) {
 3 - invalid license
 */
 
-function insert_new_user($username,$password,$hwid,$license,$loader_key) {
+function insert_new_user($connection, $username,$password,$hwid,$license,$loader_key) {
     $owner = \get_loader_owner($loader_key);
 
     if ($owner === 0)
@@ -62,7 +64,7 @@ function insert_new_user($username,$password,$hwid,$license,$loader_key) {
     if ($query->num_rows > 0)
         return 2;
 
-    $license_info = get_license_info($license,$loader_key,$owner);
+    $license_info = get_license_info($connection, $license,$loader_key,$owner);
 
     if ($license_info === 0)
         return 3;
