@@ -41,7 +41,7 @@ switch ($command) {
         ]));
     break;
     case 'login': 
-        $session_key = get_session_from_id($data->session_id);
+        $session_key = get_session_from_id($data->session_id, false);
         $request_data = json_decode($data->data); //TODO: Decrypt $data->data with $session_key
 
         $auth_data = is_valid_user($request_data->username,$request_data->password,$request_data->hwid,$request_data->loader_key);
@@ -59,6 +59,18 @@ switch ($command) {
                     'type' => 'invalid_hwid'
                 ]));
             break;
+            case 3: 
+                die(json_encode([
+                    'error' => true,
+                    'type' => 'loader_doesnt_exist'
+                ]));
+            break;
+            case 4: 
+                die(json_encode([
+                    'error' => true,
+                    'type' => 'loader_expired'
+                ]));
+            break;
             default:
                 add_session_db_identifiers($data->session_id,$request_data->username,$request_data->loader_key);
                 die(json_encode([ //Encrypt with $session_key
@@ -72,6 +84,10 @@ switch ($command) {
     case 'register':
         $session_key = get_session_from_id($data->session_id,false);
         $request_data = json_decode($data->data); //TODO: Decrypt $data->data with $session_key
+
+        $register_data = insert_new_user($request_data->username,$request_data->password,$request_data->hwid,$request_data->license,$request_data->loader_key);
+
+
 
     break;
     default:

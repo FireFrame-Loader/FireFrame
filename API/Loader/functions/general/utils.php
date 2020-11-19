@@ -13,4 +13,5 @@ function rnd_string_secure($length){
     return implode('', $pieces);
 }
 
+
 ?>
