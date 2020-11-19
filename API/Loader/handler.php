@@ -29,7 +29,6 @@ if (!isset($_POST['data'])) {
         'type' => 'no_command_data_sent'
     ]));
 }
-
 $data = json_decode($_POST['data']);
 
 switch ($command) {
@@ -42,7 +41,7 @@ switch ($command) {
         ]));
     break;
     case 'login': 
-        $session_key = get_session_key_from_id($data->session_id);
+        $session_key = get_session_from_id($data->session_id);
         $request_data = json_decode($data->data); //TODO: Decrypt $data->data with $session_key
 
         $auth_data = is_valid_user($request_data->username,$request_data->password,$request_data->hwid,$request_data->loader_key);
@@ -68,6 +67,11 @@ switch ($command) {
                 ]));
              break;
         }
+
+    break;
+    case 'register':
+        $session_key = get_session_from_id($data->session_id,false);
+        $request_data = json_decode($data->data); //TODO: Decrypt $data->data with $session_key
 
     break;
     default:

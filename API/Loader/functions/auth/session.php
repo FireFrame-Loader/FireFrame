@@ -10,12 +10,10 @@ function generate_session($aes_key) {
            ];
 }
 
-function get_session_key_from_id($session_id,$loader_key = "",$username = "") {
-    if ($loader_key !== "" && $username !== "")
-        $query = $connection->query('SELECT enc_key FROM loader_sessions WHERE session_id=? AND loader_key=? AND username=?',[$session_id,$loader_key,$username]);
-    else
-        $query = $connection->query('SELECT enc_key FROM loader_sessions WHERE session_id=?',[$session_id]);
-
+function get_session_from_id($session_id,$fetch_all) {
+    $query = $connection->query('SELECT * FROM loader_sessions WHERE session_id=? LIMIT 1',[$session_id]);
+    if ($fetch_all)
+        return $query->fetch_assoc();
     return $query->fetch_assoc()['enc_key'];
 }
 
