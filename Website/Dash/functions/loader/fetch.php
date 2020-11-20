@@ -23,9 +23,6 @@ namespace loader;
  * function fetch_all_loaders($connection, $owner){
  *      $query = $connection->query('SELECT * FROM loaders WHERE owner=?', [$owner]);
  *
- *      if($query->num_rows === 0)
- *          return 0;
- *
  *      return $query->fetch_all(1);
  * }
  *
