@@ -115,7 +115,7 @@ background-size: auto;
                                 <th scope="row"><?= $license['code'] ?></th>
                                 <td><?= htmlentities($license['usergroup']) ?></td>
                                 <td><?= $license['duration'] ?></td>
-                                <td><button class="btn btn-danger" value="<?= htmlentities($license['code']) ?>"></button></td>
+                                <td><button class="btn btn-danger" value="<?= $license['code'] ?>"></button></td>
                             </tr>
                           <?php } ?>
                         </form>
