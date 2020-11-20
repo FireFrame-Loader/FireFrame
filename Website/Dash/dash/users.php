@@ -13,11 +13,6 @@ $loader = $_SESSION['loader'];
 
 $username = $_SESSION['username'];
 
-//TODO : functions with all of these ( if we're doing an admin api )
-if (isset($_POST['delete'])) {
-    $connection->query('DELETE FROM loader_users WHERE username=? AND loader_key=? AND owner=?', [$_POST['delete'], $loader['key'], $username]);
-}
-
 if (isset($_POST['reset_pass'])) {
     $new_pass = rnd_string_secure(12);
 
@@ -28,34 +23,20 @@ if (isset($_POST['reset_pass'])) {
     die($new_pass);
 }
 
+if (isset($_POST['delete'])) {
+    auth\user\delete($connection, $loader, $_POST['delete']);
+}
+
 if (isset($_POST['add_month'])) {
-    $user = $_POST['add_month'];
-
-    $query = $connection->query('SELECT expires FROM loader_users WHERE username=? AND loader_key=? AND owner=?', [$user, $loader['key'], $username]);
-
-    $expiry = $query->fetch_assoc()['expires'];
-
-    $exp_calc = function($expiry){
-        if($expiry === -1)
-            return $expiry;
-
-        if($expiry > time())
-            return $expiry + 2592000;
-
-        return time() + 2592000;
-    };
-
-    $new_expire = $exp_calc($expiry);
-
-    $connection->query('UPDATE loader_users SET expires=? WHERE username=? AND loader_key=? AND owner=?', [$new_expire, $user, $loader['key'], $username]);
+    auth\user\update_subscription($connection, $loader, $_POST['add_month']);
 }
 
 if (isset($_POST['reset'])) {
-    $connection->query('UPDATE loader_users SET hwid=NULL WHERE username=? AND loader_key=? AND owner=?', [$_POST['reset'], $loader['key'], $username]);
+    auth\user\reset_hwid($connection, $loader, $_POST['reset']);
 }
 
 if (isset($_POST['make_life'])) {
-    $connection->query('UPDATE loader_users SET expires=\'-1\' WHERE username=? AND loader_key=? AND owner=?', [$_POST['make_life'], $loader['key'], $username]);
+    auth\user\update_subscription($connection, $loader, $_POST['make_life'], true);
 }
 
 $code_switcher = static function($code){
@@ -79,6 +60,7 @@ if(isset($_POST['username'], $_POST['password'], $_POST['confirmpassword'])) {
     }
 
     $code = auth\user\add($connection, $loader, $_POST['username'], $_POST['password'], $_POST['usergroup']);
+
     die($code_switcher($code));
 }
 
