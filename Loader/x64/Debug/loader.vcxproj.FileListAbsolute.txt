@@ -1,2 +1,0 @@
-C:\Users\denny\Documents\GitHub\FireFrame\Loader\x64\Debug\loader.exe
-C:\Users\denny\Documents\GitHub\FireFrame\Loader\x64\Debug\loader.pdb
