@@ -1,5 +1,0 @@
-﻿  main.cpp
-  C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-C:\Users\denny\Documents\GitHub\FireFrame\Loader\gui\gui.h(12,1): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\dinput.h(48): message : see previous definition of 'DIRECTINPUT_VERSION'
-  loader.vcxproj -> C:\Users\denny\Documents\GitHub\FireFrame\Loader\x64\Debug\loader.exe
