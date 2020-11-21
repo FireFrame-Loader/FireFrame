@@ -16,7 +16,7 @@ function is_valid_user($connection, $username, $password, $hwid, $loader_key) {
 
     if ($owner === 0)
         return 3;
-//NIGGA WHAT
+//NIGGA WHAT - nigga i added these checks after the func was done, hence the fcked up codes XD
     if ($owner === 1)
         return 4;
 
@@ -36,10 +36,23 @@ function is_valid_user($connection, $username, $password, $hwid, $loader_key) {
     } else
         $connection->query('UPDATE loader_users SET hwid=? WHERE username=? AND loader_key=? AND owner=?',[$hwid,$username,$loader_key,$owner]);
 
-    return [
+    $modules = get_available_modules_list($row_data['usergroup'],$loader_key,$owner);
+
+    $return_modules = array();
+
+    $return_array = [
         'usergroup' => $row_data['usergroup'],
         'expires' => $row_data['expires']
     ];
+
+    if ($modules !== 0) {
+        foreach($modules as $module) {
+            //TODO: Add $module['name'] and $module['uid'] into $return_modules
+        }
+        $return_array['modules'] = json_encode($return_modules);
+    }
+
+    return $return_array;
 }
 
 /*
@@ -74,10 +87,23 @@ function insert_new_user($connection, $username,$password,$hwid,$license,$loader
 
     $connection->query('INSERT INTO loader_users(username,password,hwid,usergroup,expires,loader_key,owner) VALUES(?,?,?,?,?,?,?)',[$username,$password,$hwid,$license_info['usergroup'],$expires,$loader_key,$owner]);
 
-    return [
+    $modules = get_available_modules_list($license_info['usergroup'],$loader_key,$owner);
+
+    $return_modules = array();
+
+    $return_array = [
         'usergroup' => $license_info['usergroup'],
         'expires' => $expires
     ];
+
+    if ($modules !== 0) {
+        foreach($modules as $module) {
+            //TODO: Add $module['name'] and $module['uid'] into $return_modules
+        }
+        $return_array['modules'] = json_encode($return_modules);
+    }
+    
+    return $return_array;
 
 }
 
