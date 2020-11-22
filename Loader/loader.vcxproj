@@ -152,6 +152,8 @@
     <ClInclude Include="dependencies\imgui\imstb_rectpack.h" />
     <ClInclude Include="dependencies\imgui\imstb_textedit.h" />
     <ClInclude Include="dependencies\imgui\imstb_truetype.h" />
+    <ClInclude Include="dependencies\security\lazy_importer.h" />
+    <ClInclude Include="dependencies\security\skcrypt.h" />
     <ClInclude Include="gui\gui.h" />
   </ItemGroup>
   <ItemGroup>

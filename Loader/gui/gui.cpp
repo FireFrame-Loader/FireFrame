@@ -1,26 +1,41 @@
 #include "gui.h"
+#include "../dependencies/security/skcrypt.h"
+#include "../dependencies/security/lazy_importer.h"
 
 static LPDIRECT3D9           g_d3d		  = nullptr;
 static LPDIRECT3DDEVICE9     g_d3d_device = nullptr;
 static D3DPRESENT_PARAMETERS g_d3d_params = {};
 
 void gui::init() {
+    static int screen_width = LI_FN(GetSystemMetrics)(SM_CXSCREEN);
+    static int screen_height = LI_FN(GetSystemMetrics)(SM_CYSCREEN);
+    static auto window_name_wchar = skCrypt(L"FireFrame");
+    static auto window_name = skCrypt("FireFrame");
+    static auto window_size = ImVec2(1266.f, 762.f);
+    static bool* window_open = nullptr;
+
     // Create application window
     //ImGui_ImplWin32_EnableDpiAwareness();
-    WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, wnd_proc, 0L, 0L, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, _T("FireFrame"), NULL };
-    ::RegisterClassEx(&wc);
-    HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("FireFrame"), WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, NULL);
+    WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, wnd_proc, 0L, 0L, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, window_name_wchar, NULL };
 
+    LI_FN(RegisterClassExW)(&wc);
+
+    window_name_wchar.encrypt();
+
+    HWND hwnd = ::CreateWindow(wc.lpszClassName, window_name_wchar, (WS_POPUP | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE | WS_CAPTION), screen_width / 2 - 640, screen_height / 2 - 400, 1280, 800, NULL, NULL, wc.hInstance, NULL);
+
+    window_name_wchar.clear();
+    
     // Initialize Direct3D
     if (!create_device(hwnd)) {
         cleanup_device();
-        ::UnregisterClass(wc.lpszClassName, wc.hInstance);
+        LI_FN(UnregisterClassW)(wc.lpszClassName, wc.hInstance);
         return;
     }
 
     // Show the window
-    ::ShowWindow(hwnd, SW_SHOWDEFAULT);
-    ::UpdateWindow(hwnd);
+    LI_FN(ShowWindow)(hwnd, SW_SHOWDEFAULT);
+    LI_FN(UpdateWindow)(hwnd);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -32,6 +47,9 @@ void gui::init() {
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
     //ImGui::StyleColorsClassic();
+
+    ImGuiStyle* style = &ImGui::GetStyle();
+    style->WindowRounding = 0.0f;
 
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(hwnd);
@@ -57,17 +75,18 @@ void gui::init() {
 
     // Main loop
     MSG msg;
-    ZeroMemory(&msg, sizeof(msg));
-    while (msg.message != WM_QUIT)
-    {
+    //RtlZeroMemory(&msg, sizeof(msg)); //memset((Destination),0,(Length))
+    memset(&msg, 0, sizeof(msg));
+
+    while (msg.message != WM_QUIT) {
         // Poll and handle messages (inputs, window resize, etc.)
         // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
         // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
         // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application.
         // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
-        if (::PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE)) {
-            ::TranslateMessage(&msg);
-            ::DispatchMessage(&msg);
+        if (PeekMessageW(&msg, NULL, 0U, 0U, PM_REMOVE)) {
+            TranslateMessage(&msg);
+            DispatchMessageW(&msg);
             continue;
         }
 
@@ -76,7 +95,10 @@ void gui::init() {
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::Begin("FireFrame");
+        ImGui::SetNextWindowPos(ImVec2(-1.f, 0.f));
+        ImGui::SetNextWindowSize(window_size);
+
+        ImGui::Begin(window_name, window_open, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 
         ImGui::End();
 
@@ -101,13 +123,15 @@ void gui::init() {
             reset_device();
     }
 
+    window_name.clear();
+
     ImGui_ImplDX9_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
 
     cleanup_device();
-    ::DestroyWindow(hwnd);
-    ::UnregisterClass(wc.lpszClassName, wc.hInstance);
+    LI_FN(DestroyWindow)(hwnd);
+    LI_FN(UnregisterClassW)(wc.lpszClassName, wc.hInstance);
 }
 
 bool gui::create_device(HWND hwnd) {
@@ -115,7 +139,8 @@ bool gui::create_device(HWND hwnd) {
         return false;
 
     // Create the D3DDevice
-    ZeroMemory(&g_d3d_params, sizeof(g_d3d_params));
+    //ZeroMemory(&g_d3d_params, sizeof(g_d3d_params)); //memset((Destination),0,(Length))
+    memset(&g_d3d_params, 0, sizeof(g_d3d_params));
     g_d3d_params.Windowed = TRUE;
     g_d3d_params.SwapEffect = D3DSWAPEFFECT_DISCARD;
     g_d3d_params.BackBufferFormat = D3DFMT_UNKNOWN;
@@ -162,9 +187,9 @@ LRESULT WINAPI gui::wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) 
             return 0;
         break;
     case WM_DESTROY:
-        ::PostQuitMessage(0);
+        LI_FN(PostQuitMessage)(0);
         return 0;
     }
 
-    return ::DefWindowProc(hwnd, msg, wparam, lparam);
+    return DefWindowProcW(hwnd, msg, wparam, lparam);
 }

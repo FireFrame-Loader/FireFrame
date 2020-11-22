@@ -16,6 +16,9 @@
     <Filter Include="gui">
       <UniqueIdentifier>{29267a8d-5486-48b8-8299-cf991609c677}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dependencies\security">
+      <UniqueIdentifier>{2fb7e30c-4a5d-4680-ae8f-757e0573753f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dependencies\imgui\imconfig.h">
@@ -44,6 +47,12 @@
     </ClInclude>
     <ClInclude Include="gui\gui.h">
       <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\security\lazy_importer.h">
+      <Filter>dependencies\security</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\security\skcrypt.h">
+      <Filter>dependencies\security</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
