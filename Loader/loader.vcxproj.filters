@@ -54,6 +54,12 @@
     <ClInclude Include="dependencies\security\skcrypt.h">
       <Filter>dependencies\security</Filter>
     </ClInclude>
+    <ClInclude Include="gui\font.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\background.h">
+      <Filter>gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dependencies\imgui\imgui.cpp">

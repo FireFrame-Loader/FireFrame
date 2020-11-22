@@ -14,12 +14,13 @@
 extern LPDIRECT3D9           g_d3d;
 extern LPDIRECT3DDEVICE9     g_d3d_device;
 extern D3DPRESENT_PARAMETERS g_d3d_params;
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
 
 namespace gui {
 	bool create_device(HWND);
 	void cleanup_device();
 	void reset_device();
 	LRESULT WINAPI wnd_proc(HWND, UINT, WPARAM, LPARAM);
+	void padded_text(const char*, float, float);
 	void init();
 }
