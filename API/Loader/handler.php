@@ -44,6 +44,14 @@ switch ($command) {
     break;
     case 'login': 
         $session_key = auth\get_session_from_id($connection, $data->session_id, false);
+
+        if ($session_key === 0) {
+            die(sign_message(json_encode([
+                'error' => true,
+                'type' => 'session_expired'
+            ])));
+        }
+
         $request_data = json_decode($data->data); //TODO: Decrypt $data->data with $session_key
 
         $auth_data = auth\is_valid_user($connection, $request_data->username, $request_data->password, $request_data->hwid, $request_data->loader_key);
@@ -85,6 +93,14 @@ switch ($command) {
     break;
     case 'register':
         $session_key = auth\get_session_from_id($connection, $data->session_id,false);
+        
+        if ($session_key === 0) {
+            die(sign_message(json_encode([
+                'error' => true,
+                'type' => 'session_expired'
+            ])));
+        }
+
         $request_data = json_decode($data->data); //TODO: Decrypt $data->data with $session_key
 
         $register_data = auth\insert_new_user($connection, $request_data->username,$request_data->password,$request_data->hwid,$request_data->license,$request_data->loader_key);

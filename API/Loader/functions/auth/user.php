@@ -47,7 +47,10 @@ function is_valid_user($connection, $username, $password, $hwid, $loader_key) {
 
     if ($modules !== 0) {
         foreach($modules as $module) {
-            //TODO: Add $module['name'] and $module['uid'] into $return_modules
+            $return_array[] = [
+                'name' => $module['name'],
+                'uid' => $module['uid']
+            ];
         }
         $return_array['modules'] = json_encode($return_modules);
     }
@@ -98,7 +101,10 @@ function insert_new_user($connection, $username,$password,$hwid,$license,$loader
 
     if ($modules !== 0) {
         foreach($modules as $module) {
-            //TODO: Add $module['name'] and $module['uid'] into $return_modules
+            $return_array[] = [
+                'name' => $module['name'],
+                'uid' => $module['uid']
+            ];
         }
         $return_array['modules'] = json_encode($return_modules);
     }
