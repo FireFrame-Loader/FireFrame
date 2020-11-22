@@ -1,17 +1,33 @@
 #include "gui.h"
 #include "../dependencies/security/skcrypt.h"
 #include "../dependencies/security/lazy_importer.h"
+#include "../dependencies/imgui/imgui_internal.h"
+#include <string>
 
 static LPDIRECT3D9           g_d3d		  = nullptr;
 static LPDIRECT3DDEVICE9     g_d3d_device = nullptr;
 static D3DPRESENT_PARAMETERS g_d3d_params = {};
 
+std::string username;
+std::string password;
+
+auto padded_text_string = skCrypt("##padded-text");
+
+void padded_text(const char* my_string, float padding_x, float padding_y) {
+    ImVec2 sz = ImGui::CalcTextSize(my_string);
+    ImVec2 cursor = ImGui::GetCursorPos();
+    ImGui::InvisibleButton(padded_text_string, sz + ImVec2(padding_x * 2, padding_y * 2));
+    ImVec2 final_cursor_pos = ImGui::GetCursorPos();
+    ImGui::SetCursorPos(cursor + ImVec2(padding_x, padding_y));
+    ImGui::Text(my_string);
+    ImGui::SetCursorPos(final_cursor_pos);
+}
+
 void gui::init() {
     static int screen_width = LI_FN(GetSystemMetrics)(SM_CXSCREEN);
     static int screen_height = LI_FN(GetSystemMetrics)(SM_CYSCREEN);
     static auto window_name_wchar = skCrypt(L"FireFrame");
-    static auto window_name = skCrypt("FireFrame");
-    static auto window_size = ImVec2(1266.f, 762.f);
+    static auto window_size = ImVec2(626.f, 363.f);
     static bool* window_open = nullptr;
 
     // Create application window
@@ -22,7 +38,7 @@ void gui::init() {
 
     window_name_wchar.encrypt();
 
-    HWND hwnd = ::CreateWindow(wc.lpszClassName, window_name_wchar, (WS_POPUP | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE | WS_CAPTION), screen_width / 2 - 640, screen_height / 2 - 400, 1280, 800, NULL, NULL, wc.hInstance, NULL);
+    HWND hwnd = ::CreateWindow(wc.lpszClassName, window_name_wchar, (WS_POPUP | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE | WS_CAPTION), screen_width / 2 - 320, screen_height / 2 - 200, 640, 400, NULL, NULL, wc.hInstance, NULL);
 
     window_name_wchar.clear();
     
@@ -70,6 +86,20 @@ void gui::init() {
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
 
+    static auto font_path = skCrypt("C:\\Windows\\Fonts\\segoeui.ttf");
+
+    ImFont* segoe_ui = io.Fonts->AddFontFromFileTTF(font_path, 24.0f);
+
+    font_path.encrypt();
+
+    ImFont* segoe_ui_big = io.Fonts->AddFontFromFileTTF(font_path, 48.0f);
+
+    font_path.clear();
+
+    IM_ASSERT(segoe_ui != NULL);
+
+    IM_ASSERT(segoe_ui_big != NULL);
+
     // Our state
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -77,6 +107,14 @@ void gui::init() {
     MSG msg;
     //RtlZeroMemory(&msg, sizeof(msg)); //memset((Destination),0,(Length))
     memset(&msg, 0, sizeof(msg));
+
+    static auto window_name = skCrypt("FireFrame");
+    static auto header = skCrypt("FireFrame - Loader");
+    static auto username_menu = skCrypt("Username");
+    static auto password_menu = skCrypt("Password");
+    static auto username_menu_hidden = skCrypt("##username");
+    static auto password_menu_hidden = skCrypt("##password");
+    static auto login = skCrypt("Login");
 
     while (msg.message != WM_QUIT) {
         // Poll and handle messages (inputs, window resize, etc.)
@@ -95,10 +133,44 @@ void gui::init() {
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::SetNextWindowPos(ImVec2(-1.f, 0.f));
+        ImGui::SetNextWindowPos(ImVec2(-1.f, -1.f));
         ImGui::SetNextWindowSize(window_size);
 
-        ImGui::Begin(window_name, window_open, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+        ImGui::Begin(window_name, window_open, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar);
+        
+        ImGui::PushFont(segoe_ui_big);
+
+        padded_text(header, (window_size.x / 4) - 2.5f, 0.f);
+        
+        ImGui::PopFont();
+
+        padded_text(username_menu, window_size.x / 2 - 47.f, 0.f);
+
+        padded_text("", 94.5f, 0.f);
+
+        ImGui::SameLine();
+
+        ImGui::SetNextItemWidth(407.f);
+
+        ImGui::InputText(username_menu_hidden, (char*)username.c_str(), username.capacity() + 1);
+
+        padded_text(password_menu, window_size.x / 2 - 45.5f, 0.f);
+
+        padded_text("", 94.5f, 0.f);
+
+        ImGui::SameLine();
+
+        ImGui::SetNextItemWidth(407.f);
+
+        ImGui::InputText(password_menu_hidden, (char*)password.c_str(), password.capacity() + 1, ImGuiInputTextFlags_Password);
+
+        padded_text(" ", 0.f, 22.f);
+
+        padded_text("", 94.5f, 0.f);
+
+        ImGui::SameLine();
+
+        ImGui::Button(login, ImVec2(408.f, 30.f));
 
         ImGui::End();
 
@@ -124,6 +196,13 @@ void gui::init() {
     }
 
     window_name.clear();
+    header.clear();
+    username_menu.clear();
+    password_menu.clear();
+    username_menu_hidden.clear();
+    password_menu_hidden.clear();
+    login.clear();
+    padded_text_string.clear();
 
     ImGui_ImplDX9_Shutdown();
     ImGui_ImplWin32_Shutdown();
