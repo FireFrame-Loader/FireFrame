@@ -93,7 +93,7 @@ switch ($command) {
     break;
     case 'register':
         $session_key = auth\get_session_from_id($connection, $data->session_id,false);
-        
+
         if ($session_key === 0) {
             die(sign_message(json_encode([
                 'error' => true,
@@ -138,7 +138,8 @@ switch ($command) {
                 ])));
              break;
         }
-
+    break;
+    case 'activate_license':
     break;
     default:
     die(sign_message(json_encode([
