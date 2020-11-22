@@ -140,6 +140,30 @@ switch ($command) {
         }
     break;
     case 'activate_license':
+        $session = auth\get_session_from_id($connection,$data->session_id,true);
+
+        if ($session_key === 0) {
+            die(sign_message(json_encode([
+                'error' => true,
+                'type' => 'session_expired'
+            ])));
+        }
+
+        $request_data = json_decode($data->data); //TODO: Decrypt with $session->enc_key
+
+        $license_reedem_data = auth\redeem_license($connection,$session->username,$request_data->license,$session->loader_key);
+
+        if ($license_reedem_data === 0) {
+            die(sign_message(json_encode([
+                'error' => true,
+                'type' => 'invalid_license'
+            ])));
+        }
+
+        die(sign_message(json_encode([
+            'error' => false,
+            'data' => json_encode($license_reedem_data)
+        ])));
     break;
     default:
     die(sign_message(json_encode([
