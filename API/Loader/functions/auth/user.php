@@ -11,6 +11,8 @@ namespace auth;
 
 use function loader\get_license_info;
 
+use function loader\get_user_groups;
+
 function is_valid_user($connection, $username, $password, $hwid, $loader_key) {
     $owner = \get_loader_owner($connection, $loader_key);
 
@@ -112,5 +114,44 @@ function insert_new_user($connection, $username,$password,$hwid,$license,$loader
     return $return_array;
 
 }
+
+/* 
+
+0 - invalid license
+
+*/
+
+function redeem_license($connection,$username,$license,$loader_key) {
+    $owner = \get_loader_owner($connection,$loader_key);
+
+    $license_info = get_license_info($connection,$license,$loader_key,$owner);
+
+    if ($license_info === 0)
+        return 0;
+
+    $new_expires = $license_info['duration'] * 86400;
+
+    $query = $connection->query('SELECT expires,usergroup FROM loader_users WHERE username=? AND loader_key=? AND owner=? LIMIT 1',[$username,$loader_key,$owner]);
+
+    $row_data = $query->fetch_assoc();
+
+    $expires = $row_data['expires'];
+
+    if (time() > $expires)
+        $new_expires = time() + $new_expires;
+    else
+        $new_expires = $expires + $new_expires;
+
+    $connection->query('UPDATE loader_users SET expires=? WHERE username=? AND loader_key=? AND owner=?',[$username,$loader_key,$owner]);
+
+    $user_groups = get_user_groups($row_data['usergroup']);
+
+    $license_user_groups = get_user_groups($license_info['usergroup']);
+
+     
+
+
+}
+
 
 ?>
