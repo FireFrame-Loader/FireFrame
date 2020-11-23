@@ -234,7 +234,7 @@ void gui::init() {
 
             ImGui::PopFont();
 
-            ImGui::SetCursorPosX(230.f);
+            ImGui::SetCursorPosX(229.f);
 
             if (ImGui::Button(modules, ImVec2(80, 35)))
                 current_tab = 0;
