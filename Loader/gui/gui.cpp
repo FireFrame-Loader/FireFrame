@@ -1,3 +1,4 @@
+#include "time.h"
 #include "gui.h"
 #include "background.h"
 #include "font.h"
@@ -5,6 +6,7 @@
 #include "../dependencies/security/lazy_importer.h"
 #include "../dependencies/imgui/imgui_internal.h"
 #include <D3dx9tex.h>
+#include <chrono>
 
 #pragma comment(lib, "D3dx9")
 
@@ -12,24 +14,26 @@ static LPDIRECT3D9           g_d3d		  = nullptr;
 static LPDIRECT3DDEVICE9     g_d3d_device = nullptr;
 static D3DPRESENT_PARAMETERS g_d3d_params = {};
 
-char register_username[33];
-char register_password[33];
-char register_confirm_pw[33];
-char username[33];
-char password[33];
+// TODO: move these to their own namespace variables or something
+char register_username[256];
+char register_password[256];
+char register_confirm_pw[256];
+char username[256];
+char password[256];
 char license_code[20];
-auto padded_text_string = skCrypt("##padded-text");
 int selected_module = 0;
 const char* const modules_list[] = { "CS:GO", "PUBG", "Rust" };
 
 void gui::init() {
     static int screen_width = LI_FN(GetSystemMetrics)(SM_CXSCREEN);
     static int screen_height = LI_FN(GetSystemMetrics)(SM_CYSCREEN);
-    static auto window_name_wchar = skCrypt(L"FireFrame");
     static auto window_size = ImVec2(626.f, 363.f);
-    static PDIRECT3DTEXTURE9 my_texture = NULL;
+    static PDIRECT3DTEXTURE9 my_texture = nullptr;
     static bool* window_open = nullptr;
-    static int window = 0;
+    static int current_window = 0;
+    static int current_tab = 0;
+
+    static auto window_name_wchar = skCrypt(L"FireFrame");
 
     // Create application window
     //ImGui_ImplWin32_EnableDpiAwareness();
@@ -39,7 +43,7 @@ void gui::init() {
 
     window_name_wchar.encrypt();
 
-    HWND hwnd = ::CreateWindow(wc.lpszClassName, window_name_wchar, (WS_POPUP | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE | WS_CAPTION), screen_width / 2 - 320, screen_height / 2 - 196.5f, 640, 400, NULL, NULL, wc.hInstance, NULL);
+    HWND hwnd = ::CreateWindow(wc.lpszClassName, window_name_wchar, (WS_POPUP | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE | WS_CAPTION), screen_width / 2 - 320, screen_height / 2 - 196, 640, 400, NULL, NULL, wc.hInstance, NULL);
 
     window_name_wchar.clear();
 
@@ -73,19 +77,19 @@ void gui::init() {
     style->PopupRounding = 3.0f;
     style->ScrollbarRounding = 3.0f;
     style->TabRounding = 3.0f;
-    style->Colors[ImGuiCol_::ImGuiCol_Button] = ImVec4(0.10f, 0.11f, 0.12f, 1.0f);
-    style->Colors[ImGuiCol_::ImGuiCol_ButtonHovered] = ImVec4(0.14f, 0.16f, 0.16f, 1.0f);
-    style->Colors[ImGuiCol_::ImGuiCol_ButtonActive] = ImVec4(0.16f, 0.17f, 0.18f, 1.0f);
-    style->Colors[ImGuiCol_::ImGuiCol_Tab] = ImVec4(0.10f, 0.11f, 0.12f, 1.0f);
-    style->Colors[ImGuiCol_::ImGuiCol_TabHovered] = ImVec4(0.14f, 0.16f, 0.16f, 1.0f);
-    style->Colors[ImGuiCol_::ImGuiCol_TabActive] = ImVec4(0.16f, 0.17f, 0.18f, 1.0f);
-    style->Colors[ImGuiCol_::ImGuiCol_FrameBg] = ImVec4(0.09f, 0.10f, 0.10f, 1.0f);
-    style->Colors[ImGuiCol_::ImGuiCol_FrameBgHovered] = ImVec4(0.09f, 0.10f, 0.10f, 1.0f);
-    style->Colors[ImGuiCol_::ImGuiCol_FrameBgActive] = ImVec4(0.09f, 0.10f, 0.10f, 1.0f);
-    style->Colors[ImGuiCol_::ImGuiCol_Header] = ImVec4(0.22f, 0.23f, 0.24f, 1.0f);
-    style->Colors[ImGuiCol_::ImGuiCol_HeaderHovered] = ImVec4(0.24f, 0.25f, 0.26f, 1.0f);
-    style->Colors[ImGuiCol_::ImGuiCol_HeaderActive] = ImVec4(0.26f, 0.27f, 0.28f, 1.0f);
-    style->Colors[ImGuiCol_::ImGuiCol_ChildBg] = ImVec4(0.07f, 0.08f, 0.06f, 1.0f);
+    style->Colors[ImGuiCol_Button] = ImVec4(0.10f, 0.11f, 0.12f, 1.0f);
+    style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.14f, 0.16f, 0.16f, 1.0f);
+    style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.16f, 0.17f, 0.18f, 1.0f);
+    style->Colors[ImGuiCol_Tab] = ImVec4(0.10f, 0.11f, 0.12f, 1.0f);
+    style->Colors[ImGuiCol_TabHovered] = ImVec4(0.14f, 0.16f, 0.16f, 1.0f);
+    style->Colors[ImGuiCol_TabActive] = ImVec4(0.16f, 0.17f, 0.18f, 1.0f);
+    style->Colors[ImGuiCol_FrameBg] = ImVec4(0.09f, 0.10f, 0.10f, 1.0f);
+    style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.09f, 0.10f, 0.10f, 1.0f);
+    style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.09f, 0.10f, 0.10f, 1.0f);
+    style->Colors[ImGuiCol_Header] = ImVec4(0.22f, 0.23f, 0.24f, 1.0f);
+    style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.24f, 0.25f, 0.26f, 1.0f);
+    style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.26f, 0.27f, 0.28f, 1.0f);
+    style->Colors[ImGuiCol_ChildBg] = ImVec4(0.07f, 0.08f, 0.06f, 1.0f);
 
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(hwnd);
@@ -122,31 +126,34 @@ void gui::init() {
     // Main loop
     MSG msg;
     //RtlZeroMemory(&msg, sizeof(msg)); //memset((Destination),0,(Length))
-    memset(&msg, 0, sizeof(msg));
+    LI_FN(memset)(&msg, 0, sizeof(msg));
 
     static auto window_name = skCrypt("FireFrame");
     static auto header = skCrypt("FireFrame - Loader");
-    static auto username_menu = skCrypt("Username");
-    static auto password_menu = skCrypt("Password");
-    static auto username_menu_hidden = skCrypt("##username");
-    static auto password_menu_hidden = skCrypt("##password");
+    static auto username_login = skCrypt("Username");
+    static auto password_login = skCrypt("Password");
+    static auto username_login_hidden = skCrypt("##username");
+    static auto password_login_hidden = skCrypt("##password");
     static auto login = skCrypt("Login");
     static auto module_selection = skCrypt("Module Selection");
     static auto module_tabs = skCrypt("##moduletabs");
     static auto modules = skCrypt("Modules");
-    static auto modules_child = skCrypt("##moduleschild");
     static auto modules_hidden = skCrypt("##modules");
     static auto load = skCrypt("Load");
     static auto redeem_tab = skCrypt("Redeem");
-    static auto redeem_child = skCrypt("##redeemchild");
     static auto license = skCrypt("##license");
     static auto redeem = skCrypt("Redeem");
     static auto key = skCrypt("Key");
     static auto register_ = skCrypt("Register");
-    static auto username_menu_register = skCrypt("##registerusername");
-    static auto password_menu_register = skCrypt("##registerpw");
-    static auto confirm_pw_menu_register = skCrypt("##confirmpw");
+    static auto username_register = skCrypt("##registerusername");
+    static auto password_register = skCrypt("##registerpw");
+    static auto confirm_pw_register = skCrypt("##confirmpw");
     static auto confirm_password = skCrypt("Confirm Password");
+    static auto remaining_time = skCrypt("Expires On: %i-%i-%i");
+
+    time_t time = 32879409516;
+    auto converted_time = std::chrono::system_clock::from_time_t(time);
+    auto final_date = date::year_month_day(floor<date::days>(converted_time));
 
     while (msg.message != WM_QUIT) {
         // Poll and handle messages (inputs, window resize, etc.)
@@ -172,146 +179,155 @@ void gui::init() {
 
         ImGui::GetCurrentWindow()->DrawList->AddImage((void*)my_texture, ImVec2(0.f, 0.f), ImVec2(626.f, 363.f));
 
-        switch (window) {
+        switch (current_window) {
         case 0:
             ImGui::PushFont(segoe_ui_big);
 
-            padded_text(header, (window_size.x / 4) - 2.5f, 0.f);
+            ImGui::SetCursorPosX(ImGui::GetCursorPos().x + (window_size.x / 4) - 2.5f);
+
+            ImGui::Text(header);
 
             ImGui::PopFont();
 
-            padded_text(username_menu, window_size.x / 2 - 47.f, 0.f);
+            ImGui::SetCursorPosX(ImGui::GetCursorPos().x + window_size.x / 2 - 47.f);
 
-            username_menu.encrypt();
+            ImGui::Text(username_login);
 
-            padded_text("", 94.5f, 0.f);
+            username_login.encrypt();
 
-            ImGui::SameLine();
-
-            ImGui::SetNextItemWidth(407.f);
-
-            ImGui::InputText(username_menu_hidden, username, sizeof(username));
-
-            padded_text(password_menu, window_size.x / 2 - 44.f, 0.f);
-
-            password_menu.encrypt();
-
-            padded_text("", 94.5f, 0.f);
-
-            ImGui::SameLine();
+            ImGui::SetCursorPosX(ImGui::GetCursorPos().x + 94.5f);
 
             ImGui::SetNextItemWidth(407.f);
 
-            ImGui::InputText(password_menu_hidden, password, sizeof(password), ImGuiInputTextFlags_Password);
+            ImGui::InputText(username_login_hidden, username, sizeof(username));
 
-            padded_text(" ", 0.f, 14.f);
+            ImGui::SetCursorPosX(ImGui::GetCursorPos().x + window_size.x / 2 - 44.f);
 
-            padded_text("", 94.5f, 0.f);
+            ImGui::Text(password_login);
 
-            ImGui::SameLine();
+            password_login.encrypt();
+
+            ImGui::SetCursorPosX(ImGui::GetCursorPos().x + 94.5f);
+
+            ImGui::SetNextItemWidth(407.f);
+
+            ImGui::InputText(password_login_hidden, password, sizeof(password), ImGuiInputTextFlags_Password);
+
+            ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x + 94.5f, ImGui::GetCursorPos().y + 55.f));
 
             if (ImGui::Button(login, ImVec2(408.f, 30.f)))
-                window = 1;
+                current_window = 1;
 
-            padded_text("", 94.5f, 0.f);
-
-            ImGui::SameLine();
+            ImGui::SetCursorPosX(ImGui::GetCursorPos().x + 94.5f);
 
             if (ImGui::Button(register_, ImVec2(408.f, 30.f))) {
                 register_.encrypt();
-                window = 2;
+                current_window = 2;
             }
             break;
         case 1:
             ImGui::PushFont(segoe_ui_big);
 
-            padded_text(module_selection, (window_size.x / 4) + 11.f, 0.f);
+            ImGui::SetCursorPosX(ImGui::GetCursorPos().x + (window_size.x / 4) + 11.f);
+
+            ImGui::Text(module_selection);
 
             ImGui::PopFont();
 
-            if (ImGui::BeginTabBar(module_tabs, ImGuiTabBarFlags_None)) {
-                if (ImGui::BeginTabItem(modules)) {
-                    ImGui::BeginChild(modules_child, ImVec2(610.f, 221.f), true);
+            ImGui::SetCursorPosX(230.f);
 
-                    ImGui::SetNextItemWidth(594.f);
+            if (ImGui::Button(modules, ImVec2(80, 35)))
+                current_tab = 0;
 
-                    ImGui::ListBox(modules_hidden, &selected_module, modules_list , IM_ARRAYSIZE(modules_list));
+            ImGui::SameLine();
 
-                    ImGui::EndChild();
+            if (ImGui::Button(redeem_tab, ImVec2(80, 35)))
+                current_tab = 1;
 
-                    ImGui::Button(load, ImVec2(610.f, 36.f));
+            switch (current_tab) {
+            case 0:
+                ImGui::BeginChild(1, ImVec2(301.f, 216.f), true);
 
-                    ImGui::EndTabItem();
-                }
+                ImGui::SetNextItemWidth(285.f);
 
-                if (ImGui::BeginTabItem(redeem_tab)) {
-                    ImGui::BeginChild(redeem_child, ImVec2(610.f, 261.f), true);
+                ImGui::ListBox(modules_hidden, &selected_module, modules_list, IM_ARRAYSIZE(modules_list));
 
-                    padded_text(key, 282.5f, 0.f);
+                ImGui::EndChild();
 
-                    ImGui::SetNextItemWidth(594.f);
+                ImGui::SameLine();
 
-                    ImGui::InputText(license, license_code, sizeof(license_code));
+                ImGui::BeginChild(2, ImVec2(301.f, 216.f), true);
 
-                    padded_text("   ", 0.f, 59.f);
+                ImGui::Text(remaining_time, final_date.day(), final_date.month(), final_date.year());
 
-                    ImGui::Button(redeem, ImVec2(594.f, 37.f));
+                ImGui::EndChild();
 
-                    ImGui::EndChild();
+                ImGui::Button(load, ImVec2(610.f, 36.f));
+                break;
+            case 1:
+                ImGui::BeginChild(3, ImVec2(610.f, 256.f), true);
 
-                    ImGui::EndTabItem();
-                }
+                ImGui::SetCursorPosX(ImGui::GetCursorPos().x + 282.5f);
 
-                ImGui::EndTabBar();
+                ImGui::Text(key);
+
+                ImGui::SetNextItemWidth(594.f);
+
+                ImGui::InputText(license, license_code, sizeof(license_code));
+
+                ImGui::SetCursorPosY(ImGui::GetCursorPos().y + 141.f);
+
+                ImGui::Button(redeem, ImVec2(594.f, 37.f));
+
+                ImGui::EndChild();
+                break;
             }
             break;
         case 2:
             ImGui::PushFont(segoe_ui_big);
 
-            padded_text(register_, (window_size.x / 2) - 74.5f, 0.f);
+            ImGui::SetCursorPosX(ImGui::GetCursorPos().x + (window_size.x / 2) - 74.5f);
+
+            ImGui::Text(register_);
 
             register_.encrypt();
 
             ImGui::PopFont();
 
-            padded_text(username_menu, window_size.x / 2 - 49.f, 0.f);
+            ImGui::SetCursorPosX(ImGui::GetCursorPos().x + window_size.x / 2 - 49.f);
 
-            padded_text("", 94.5f, 0.f);
+            ImGui::Text(username_login);
 
-            ImGui::SameLine();
-
-            ImGui::SetNextItemWidth(407.f);
-
-            ImGui::InputText(username_menu_register, register_username, sizeof(register_username));
-
-            padded_text(password_menu, window_size.x / 2 - 45.f, 0.f);
-
-            padded_text("", 94.5f, 0.f);
-
-            ImGui::SameLine();
+            ImGui::SetCursorPosX(ImGui::GetCursorPos().x + 94.5f);
 
             ImGui::SetNextItemWidth(407.f);
 
-            ImGui::InputText(password_menu_register, register_password, sizeof(register_password), ImGuiInputTextFlags_Password);
+            ImGui::InputText(username_register, register_username, sizeof(register_username));
 
-            padded_text(confirm_password, window_size.x / 2 - 79.f, 0.f);
+            ImGui::SetCursorPosX(ImGui::GetCursorPos().x + window_size.x / 2 - 45.f);
 
-            padded_text("", 94.5f, 0.f);
+            ImGui::Text(password_login);
 
-            ImGui::SameLine();
+            ImGui::SetCursorPosX(ImGui::GetCursorPos().x + 94.5f);
 
             ImGui::SetNextItemWidth(407.f);
 
-            ImGui::InputText(confirm_pw_menu_register, register_confirm_pw, sizeof(register_confirm_pw), ImGuiInputTextFlags_Password);
+            ImGui::InputText(password_register, register_password, sizeof(register_password), ImGuiInputTextFlags_Password);
 
-            padded_text(" ", 0.f, 6.5f);
+            ImGui::SetCursorPosX(ImGui::GetCursorPos().x + window_size.x / 2 - 79.f);
 
-            padded_text("", 94.5f, 0.f);
+            ImGui::Text(confirm_password);
 
-            ImGui::SameLine();
+            ImGui::SetCursorPosX(ImGui::GetCursorPos().x + 94.5f);
+
+            ImGui::SetNextItemWidth(407.f);
+
+            ImGui::InputText(confirm_pw_register, register_confirm_pw, sizeof(register_confirm_pw), ImGuiInputTextFlags_Password);
+
+            ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x + 94.5f, ImGui::GetCursorPos().y + 41.f));
 
             if (ImGui::Button(register_, ImVec2(408.f, 30.f)))
-                window = 1;
+                current_window = 1;
 
             break;
         }
@@ -341,28 +357,26 @@ void gui::init() {
 
     window_name.clear();
     header.clear();
-    username_menu.clear();
-    password_menu.clear();
-    username_menu_hidden.clear();
-    password_menu_hidden.clear();
+    username_login.clear();
+    password_login.clear();
+    username_login_hidden.clear();
+    password_login_hidden.clear();
     login.clear();
-    padded_text_string.clear();
     module_selection.clear();
     module_tabs.clear();
     modules.clear();
-    modules_child.clear();
     modules_hidden.clear();
     load.clear();
     redeem_tab.clear();
-    redeem_child.clear();
     license.clear();
     redeem.clear();
     key.clear();
     register_.clear();
-    username_menu_register.clear();
-    password_menu_register.clear();
-    confirm_pw_menu_register.clear();
+    username_register.clear();
+    password_register.clear();
+    confirm_pw_register.clear();
     confirm_password.clear();
+    remaining_time.clear();
 
     ImGui_ImplDX9_Shutdown();
     ImGui_ImplWin32_Shutdown();
@@ -379,7 +393,7 @@ bool gui::create_device(HWND hwnd) {
 
     // Create the D3DDevice
     //ZeroMemory(&g_d3d_params, sizeof(g_d3d_params)); //memset((Destination),0,(Length))
-    memset(&g_d3d_params, 0, sizeof(g_d3d_params));
+    LI_FN(memset)(&g_d3d_params, 0, sizeof(g_d3d_params));
     g_d3d_params.Windowed = TRUE;
     g_d3d_params.SwapEffect = D3DSWAPEFFECT_DISCARD;
     g_d3d_params.BackBufferFormat = D3DFMT_UNKNOWN;
@@ -431,15 +445,4 @@ LRESULT WINAPI gui::wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) 
     }
 
     return DefWindowProcW(hwnd, msg, wparam, lparam);
-}
-
-void gui::padded_text(const char* my_string, float padding_x, float padding_y) {
-    ImVec2 sz = ImGui::CalcTextSize(my_string);
-    ImVec2 cursor = ImGui::GetCursorPos();
-    ImGui::InvisibleButton(padded_text_string, sz + ImVec2(padding_x * 2, padding_y * 2));
-    ImVec2 final_cursor_pos = ImGui::GetCursorPos();
-    ImGui::SetCursorPos(cursor + ImVec2(padding_x, padding_y));
-    ImGui::Text(my_string);
-    ImGui::SetCursorPos(final_cursor_pos);
-    padded_text_string.encrypt();
 }

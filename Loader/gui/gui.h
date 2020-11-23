@@ -9,8 +9,6 @@
 
 #pragma comment (lib,"d3d9.lib")
 
-#define DIRECTINPUT_VERSION 0x0800
-
 extern LPDIRECT3D9           g_d3d;
 extern LPDIRECT3DDEVICE9     g_d3d_device;
 extern D3DPRESENT_PARAMETERS g_d3d_params;
@@ -21,6 +19,5 @@ namespace gui {
 	void cleanup_device();
 	void reset_device();
 	LRESULT WINAPI wnd_proc(HWND, UINT, WPARAM, LPARAM);
-	void padded_text(const char*, float, float);
 	void init();
 }
