@@ -21,5 +21,10 @@ function sign_message($message) {
     return $gpg->sign($message);
 }
 
+function contains($needle, $haystack)
+{
+    return strpos($haystack, $needle) !== false;
+}
+
 
 ?>

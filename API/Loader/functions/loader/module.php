@@ -1,17 +1,6 @@
 <?php
 namespace loader;
 
-function contains($needle, $haystack)
-{
-    return strpos($haystack, $needle) !== false;
-}
-
-function get_user_groups($usergroup) {
-    if (contains(',',$usergroup))
-        $usergroup = explode(',',$usergroup);
-    return $usergroup;
-}
-
 /* 
 
 0 - no modules available
@@ -27,34 +16,9 @@ function get_available_modules_list($user_groups,$loader_key,$owner) {
     $modules = $query->fetch_all(1);
     $allowed_modules = array();
 
-    $user_groups = get_user_groups($user_groups);
 
-    foreach($modules as $module) { //this definitely needs some cleaning and maybe even replacement\!
-        $module_groups = get_user_groups($module['groups']);
-        if (is_array($module_groups) && is_array($user_groups)) { 
-            foreach($module_groups as $module_group) { 
-                foreach($user_groups as $user_group) { 
-                    if ($module_group !== $user_group) 
-                        continue;
-                    $allowed_modules[] = $module;
-                }
-            }
-        } else if (is_array($module_groups) && !is_array($user_groups)) {
-            foreach($module_groups as $module_group) {
-                if ($module_group !== $user_groups)
-                    continue;
-                $allowed_modules[] = $module;
-            }
-        } else if (!is_array($module_groups) && is_array($user_groups)) {
-            foreach($user_groups as $user_group) {
-                if ($user_group !== $module_groups)
-                    continue;
-                $allowed_modules[] = $module;
-            }
-        } else {
-            if ($user_groups === $module_groups)
-                $allowed_modules[] = $module;
-        }
+    foreach($modules as $module) { 
+        //check if $module['groups'] contains group from $user_groups, if so check if the expires value assigned to the group is expired or not. if everything passed add $module into $allowed_modules
     }
 
     if (empty($allowed_modules))

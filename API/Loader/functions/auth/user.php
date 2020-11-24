@@ -18,7 +18,7 @@ function is_valid_user($connection, $username, $password, $hwid, $loader_key) {
 
     if ($owner === 0)
         return 3;
-//NIGGA WHAT - nigga i added these checks after the func was done, hence the fcked up codes XD
+
     if ($owner === 1)
         return 4;
 
@@ -43,8 +43,7 @@ function is_valid_user($connection, $username, $password, $hwid, $loader_key) {
     $return_modules = array();
 
     $return_array = [
-        'usergroup' => $row_data['usergroup'],
-        'expires' => $row_data['expires']
+        'usergroup' => $row_data['usergroup'], //is already json_encoded in db
     ];
 
     if ($modules !== 0) {
@@ -87,18 +86,29 @@ function insert_new_user($connection, $username,$password,$hwid,$license,$loader
     if ($license_info === 0)
         return 3;
     
-    $expires = $license_info['duration'] * 86400;
+    $expires = time() + ($license_info['duration'] * 86400);
     $password = password_hash($password,PASSWORD_DEFAULT);
 
-    $connection->query('INSERT INTO loader_users(username,password,hwid,usergroup,expires,loader_key,owner) VALUES(?,?,?,?,?,?,?)',[$username,$password,$hwid,$license_info['usergroup'],$expires,$loader_key,$owner]);
+
+    /* 
+
+    $usergroup = json_encode($array) 
+
+    $array = [ - we should probably wrap this around with an another array, so we can have multiple groups x)
+        'group' => $license_info['usergroup'],
+        'expires' => $expires
+    ]
+    
+    */
+
+    $connection->query('INSERT INTO loader_users(username,password,hwid,usergroup,loader_key,owner) VALUES(?,?,?,?,?,?,?)',[$username,$password,$hwid,$usergroup,$loader_key,$owner]);
 
     $modules = get_available_modules_list($license_info['usergroup'],$loader_key,$owner);
 
     $return_modules = array();
 
     $return_array = [
-        'usergroup' => $license_info['usergroup'],
-        'expires' => $expires
+        'usergroup' => $usergroup, //will be json_encoded; see comment above
     ];
 
     if ($modules !== 0) {
@@ -131,25 +141,15 @@ function redeem_license($connection,$username,$license,$loader_key) {
 
     $new_expires = $license_info['duration'] * 86400;
 
-    $query = $connection->query('SELECT expires,usergroup FROM loader_users WHERE username=? AND loader_key=? AND owner=? LIMIT 1',[$username,$loader_key,$owner]);
+    /* Check if user already has $license_info['usergroup'], if the user has it, check if the assigned expiration time is expired
+        if expired, set expiration time() + $new_expires
+        if not expired, add $new_expires to the time
 
-    $row_data = $query->fetch_assoc();
+        if user doesnt have the group
+        add the group and assign time() + $new_expires
 
-    $expires = $row_data['expires'];
-
-    if (time() > $expires)
-        $new_expires = time() + $new_expires;
-    else
-        $new_expires = $expires + $new_expires;
-
-    $connection->query('UPDATE loader_users SET expires=? WHERE username=? AND loader_key=? AND owner=?',[$username,$loader_key,$owner]);
-
-    $user_groups = get_user_groups($row_data['usergroup']);
-
-    $license_user_groups = get_user_groups($license_info['usergroup']);
-
-     
-
+        return json_encode(usergroup:expires) array and json_encode(available modules) array - basically like in the funcs above
+    */
 
 }
 
