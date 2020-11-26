@@ -1,6 +1,6 @@
 <?php
 
-$connection = new mysqli_wrapper('localhost','root','','fireframe');
+$connection = new mysqli_wrapper('localhost','admin','Osmakdegu123456789#','fireframe');
 
 function is_onion() {
     return $_SERVER['HTTP_HOST'] === 'etqz5veooa2zlcftxzkbxs6k4kvcbyqfuiq7uesxspwikcwzxamnzsyd.onion';

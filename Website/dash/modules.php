@@ -1,6 +1,6 @@
 <?php
-require '../functions/includes.php';
-require '../functions/session.php';
+require '../firefra.me/functions/includes.php';
+require '../firefra.me/functions/session.php';
 
 session_regenerate_id();
 
