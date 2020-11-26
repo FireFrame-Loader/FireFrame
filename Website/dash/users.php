@@ -1,6 +1,6 @@
 <?php
-require '../firefra.me/functions/includes.php';
-require '../firefra.me/functions/session.php';
+require '../functions/includes.php';
+require '../functions/session.php';
 
 session_regenerate_id();
 
@@ -27,16 +27,14 @@ if (isset($_POST['delete'])) {
     auth\user\delete($connection, $loader, $_POST['delete']);
 }
 
-if (isset($_POST['add_month'])) {
-    auth\user\update_subscription($connection, $loader, $_POST['add_month']);
+if (isset($_POST['add_month']) || isset($_POST['make_life'])) {
+    $life = isset($_POST['make_life']);
+
+    auth\user\update_subscription($connection, $loader, $life ? $_POST['make_life'] : $_POST['add_month'], $life);
 }
 
 if (isset($_POST['reset'])) {
     auth\user\reset_hwid($connection, $loader, $_POST['reset']);
-}
-
-if (isset($_POST['make_life'])) {
-    auth\user\update_subscription($connection, $loader, $_POST['make_life'], true);
 }
 
 $code_switcher = static function($code){

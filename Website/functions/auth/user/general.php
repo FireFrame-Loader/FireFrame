@@ -27,14 +27,15 @@ function update_subscription($connection, $loader, $username, $life = false){
         return 0;
     }
 
-    $query = $connection->query('SELECT expires FROM loaders_users WHERE loader_key=? AND username=?', [$loader['key'], $username]);
+    $query = $connection->query('SELECT expires FROM loader_users WHERE loader_key=? AND username=?', [$loader['key'], $username]);
 
-    if($query->num_rows === 0)
+    if($query->num_rows === 0) {
         return 2;
+    }
 
     $expiry_ts = $query->fetch_assoc()['expires'];
 
-    $exp_calc = function($expiry){
+    $exp_calc = static function($expiry){
         $tm = '+1 month';
 
         if($expiry === -1)

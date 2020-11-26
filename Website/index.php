@@ -1,19 +1,7 @@
 <?php
-function is_onion() {
-  $http_host = $_SERVER['HTTP_HOST'];
-  if ($http_host == "etqz5veooa2zlcftxzkbxs6k4kvcbyqfuiq7uesxspwikcwzxamnzsyd.onion")
-      return true;
-  return false;
-}
+require 'functions/includes.php';
 
-function process_link($add,$dash) {
-  if(is_onion())
-      return 'http://etqz5veooa2zlcftxzkbxs6k4kvcbyqfuiq7uesxspwikcwzxamnzsyd.onion/' . ($dash ? 'dash/' : '') . $add;
-
-  return 'https://' . ($dash ? 'dash.' : '') . 'firefra.me/' . $add;
-}
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,7 +43,7 @@ background-size: auto;
         <a class="nav-item nav-link" href="https://t.me/fire_frame"><img src="Telegram-Logo.png" width="28" height="28"></a>  
         </div>
     </div>
-    <form class="form-inline p-0 m-0" action="<?php echo process_link("login.php",true);?>">
+    <form class="form-inline p-0 m-0" action="<?php echo process_link("login.php",false);?>">
       <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Sign In</button>
 
       <button class="navbar-toggler ml-3 " type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">

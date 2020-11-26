@@ -1,18 +1,20 @@
 <?php
 
-$connection = new mysqli_wrapper('localhost','admin','Osmakdegu123456789#','fireframe');
+$connection = new mysqli_wrapper('localhost','root','','fireframe');
 
 function is_onion() {
     return $_SERVER['HTTP_HOST'] === 'etqz5veooa2zlcftxzkbxs6k4kvcbyqfuiq7uesxspwikcwzxamnzsyd.onion';
 }
 
 function process_link($add, $dash) {
-    if(is_onion()) {
-        return 'http://etqz5veooa2zlcftxzkbxs6k4kvcbyqfuiq7uesxspwikcwzxamnzsyd.onion/' . ($dash ? 'dash/' : '') . $add;
-    }
+    $to_add = ($dash ? '/dash/' : '/') . $add;
 
-    //return 'http://localhost/' . ($dash ? 'dash/' : '') . $add;
-    return 'https://firefra.me/' . ($dash ? 'dash/' : '') . $add;
+    $out = '://' . $_SERVER['HTTP_HOST'];
+
+    return (
+        (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] === 'on')
+            ? 'https'.$out : 'http'.$out) .
+        $to_add;
 }
 
 function validate_password($password) {

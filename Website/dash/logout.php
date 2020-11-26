@@ -1,7 +1,7 @@
 <?php 
-require '../firefra.me/functions/session.php';
+require '../functions/session.php';
 
 session_destroy();
 
-header("Location: ../firefra.me/login.php");
+header("Location: ../login.php");
 

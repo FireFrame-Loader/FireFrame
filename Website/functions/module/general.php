@@ -4,7 +4,7 @@ namespace module;
 use encryption;
 
 function get_upload_path($name){
-    return dirname(__FILE__) . '/../../module/'.$name;
+    return dirname(__FILE__) . '/../../modules/'.$name; // create a folder named modules 'htdocs/modules'
 }
 
 function module_of_owner($connection, $username, $module_uid){
@@ -26,7 +26,7 @@ function upload($connection, $file, $loader, $module_name, $target_process, $gro
     $file_path = get_upload_path($server_name);
 
     if(empty($file))
-        return 3;
+        return 3; //error occurred
 
     $file_name = basename($file['name']);
 
@@ -35,8 +35,8 @@ function upload($connection, $file, $loader, $module_name, $target_process, $gro
     if($file_extension !== 'dll' || $file['size'] > 8388608) //8mb?
         return 4;
 
-    if(@!move_uploaded_file($file['tmp_name'], $file_path))
-        return 3;
+    if(!move_uploaded_file($file['tmp_name'], $file_path)) // no perms smh or invalid path?
+        return 3; //error occurred
 
     file_put_contents($file_path, encryption\encrypt_file($file_path, $server_key));
 

@@ -6,7 +6,9 @@ $dirs = array(
     $dir.'auth/owner/*.php',
     $dir.'auth/user/*.php',
     $dir.'loader/*.php',
-    $dir.'module/*.php'
+    $dir.'module/*.php',
+    $dir.'licenses/*.php',
+
 );
 
 foreach($dirs as $_dir) {

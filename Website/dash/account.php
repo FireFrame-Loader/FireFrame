@@ -1,7 +1,7 @@
 <?php
 
-require '../firefra.me/functions/includes.php';
-require '../firefra.me/functions/session.php';
+require '../functions/includes.php';
+require '../functions/session.php';
 
 session_regenerate_id();
 
