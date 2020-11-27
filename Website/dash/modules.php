@@ -29,11 +29,12 @@ if(isset($_POST['uid'], $_POST['name'], $_POST['process'])){
     ]);
 }
 
-if(!empty($_POST))
+if(!empty($_POST) && !isset($_POST['update']))
     header("Refresh:0");
 
 ?>
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -115,9 +116,7 @@ background-size: auto;
                         <?php
                         $modules = module\fetch_all($connection, $loader);
 
-                        foreach($modules as $module){
-                            $upd_link = process_link('modules.php?update='.$module['uid'], true);
-                            ?>
+                        foreach($modules as $module){ ?>
                             <tr>
                                 <th scope="row"><?= htmlentities($module['name']) ?></th>
                                 <td><?= htmlentities($module['process']) ?></td>
@@ -125,7 +124,7 @@ background-size: auto;
                                 <td><?= $module['paused'] ? 'true' : 'false' ?></td>
                                 <td>
                                     <button name="<?= $module['paused'] ? 'unpause' : 'pause' ?>" class="btn btn-warning" value="<?= $module['uid'] ?>">Pause/Unpause</button>
-                                    <button name="update" onclick="<?= $upd_link ?>" class="btn btn-success" value="<?= $module['uid'] ?>">Update</button>
+                                    <button name="update" class="btn btn-success" value="<?= $module['uid'] ?>">Update</button>
                                     <button name="delete" class="btn btn-danger" value="<?= $module['uid'] ?>">Delete</button>
                                 </td>
                             </tr>
@@ -139,7 +138,7 @@ background-size: auto;
     </div>
 </div>
 <?php
-if (isset($_GET['update'])) {
+if (isset($_POST['update'])) {
     $module_data = module\fetch($connection, $loader, $_POST['update']); ?>
     <div class="container h-100 d-flex justify-content-center pt-5 mb-5">
         <div class="col-lg-10">
