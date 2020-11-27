@@ -96,7 +96,7 @@ background-size: auto;
             <a class="nav-item nav-link" href="">|</a>
             <a class="nav-item nav-link" href="<?php echo (is_onion()) ? 'https://firefra.me' : 'http://etqz5veooa2zlcftxzkbxs6k4kvcbyqfuiq7uesxspwikcwzxamnzsyd.onion/'; ?>"><?php echo (is_onion()) ? 'Clearnet' : 'Tor'; ?></a>
             <a class="nav-item nav-link" href="<?php echo process_link("tos.php", false); ?>">ToS & PP</a>
-            <a class="nav-item nav-link" href="https://discord.gg/xPtevhPHQp"><img src="../Discord-Logo-White.png" width="30" height="30"></a>
+            <a class="nav-item nav-link" href="https://discord.gg/2bAH7AsxFx"><img src="../Discord-Logo-White.png" width="30" height="30"></a>
             <a class="nav-item nav-link" href="https://t.me/fire_frame"><img src="../Telegram-Logo.png" width="28" height="28"></a>
         </div>
     </div>
