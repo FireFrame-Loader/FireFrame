@@ -4,7 +4,7 @@ namespace module;
 use encryption;
 
 function get_upload_path($name){
-    return dirname(__FILE__) . '/../../modules/'.$name; // create a folder named modules 'htdocs/modules'
+    return '/var/www/html/dash.firefra.me/modules/'.$name; // create a folder named modules 'htdocs/modules'
 }
 
 function module_of_owner($connection, $username, $module_uid){
