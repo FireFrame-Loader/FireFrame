@@ -2,6 +2,8 @@
 
 //TODO : include functions
 
+use function general\sign_message;
+
 if($_SERVER['HTTP_USER_AGENT'] !== '#F1R3FR4M3L04D3R#'){
     die(sign_message(json_encode([
         'error' => true,
