@@ -156,12 +156,19 @@
     <ClInclude Include="dependencies\imgui\imstb_rectpack.h" />
     <ClInclude Include="dependencies\imgui\imstb_textedit.h" />
     <ClInclude Include="dependencies\imgui\imstb_truetype.h" />
-    <ClInclude Include="dependencies\security\lazy_importer.h" />
-    <ClInclude Include="dependencies\security\skcrypt.h" />
+    <ClInclude Include="dependencies\pgp\rekey\rnp_key_store.h" />
+    <ClInclude Include="dependencies\pgp\repgp\repgp_def.h" />
+    <ClInclude Include="dependencies\pgp\rnp.h" />
+    <ClInclude Include="dependencies\pgp\rnp\rnp.h" />
+    <ClInclude Include="dependencies\pgp\rnp\rnp_def.h" />
+    <ClInclude Include="dependencies\pgp\rnp\rnp_err.h" />
+    <ClInclude Include="dependencies\pgp\rnp\rnp_sdk.h" />
     <ClInclude Include="gui\font.h" />
     <ClInclude Include="gui\gui.h" />
     <ClInclude Include="gui\background.h" />
     <ClInclude Include="gui\time.h" />
+    <ClInclude Include="security\lazy_importer.h" />
+    <ClInclude Include="security\skcrypt.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\main.cpp" />

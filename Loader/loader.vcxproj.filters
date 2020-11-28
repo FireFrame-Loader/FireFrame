@@ -16,8 +16,20 @@
     <Filter Include="gui">
       <UniqueIdentifier>{29267a8d-5486-48b8-8299-cf991609c677}</UniqueIdentifier>
     </Filter>
-    <Filter Include="dependencies\security">
-      <UniqueIdentifier>{2fb7e30c-4a5d-4680-ae8f-757e0573753f}</UniqueIdentifier>
+    <Filter Include="security">
+      <UniqueIdentifier>{c826f41b-96a6-47ca-9434-573f3fdcf5a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\pgp">
+      <UniqueIdentifier>{7792a126-1e0b-4a3a-9f83-5d4c37ca077c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\pgp\rekey">
+      <UniqueIdentifier>{dde8ec1d-2dab-46c6-a8db-55875dc0d531}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\pgp\repgp">
+      <UniqueIdentifier>{d71ca758-b2fe-481e-936f-9fd3cfca3fce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\pgp\rnp">
+      <UniqueIdentifier>{ecfe858b-81f8-408b-9adc-b5febe0306db}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,12 +60,6 @@
     <ClInclude Include="gui\gui.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="dependencies\security\lazy_importer.h">
-      <Filter>dependencies\security</Filter>
-    </ClInclude>
-    <ClInclude Include="dependencies\security\skcrypt.h">
-      <Filter>dependencies\security</Filter>
-    </ClInclude>
     <ClInclude Include="gui\font.h">
       <Filter>gui</Filter>
     </ClInclude>
@@ -62,6 +68,33 @@
     </ClInclude>
     <ClInclude Include="gui\time.h">
       <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="security\lazy_importer.h">
+      <Filter>security</Filter>
+    </ClInclude>
+    <ClInclude Include="security\skcrypt.h">
+      <Filter>security</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\pgp\rnp.h">
+      <Filter>dependencies\pgp</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\pgp\rekey\rnp_key_store.h">
+      <Filter>dependencies\pgp\rekey</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\pgp\repgp\repgp_def.h">
+      <Filter>dependencies\pgp\repgp</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\pgp\rnp\rnp.h">
+      <Filter>dependencies\pgp\rnp</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\pgp\rnp\rnp_def.h">
+      <Filter>dependencies\pgp\rnp</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\pgp\rnp\rnp_err.h">
+      <Filter>dependencies\pgp\rnp</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\pgp\rnp\rnp_sdk.h">
+      <Filter>dependencies\pgp\rnp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -2,8 +2,8 @@
 #include "gui.h"
 #include "background.h"
 #include "font.h"
-#include "../dependencies/security/skcrypt.h"
-#include "../dependencies/security/lazy_importer.h"
+#include "../security/skcrypt.h"
+#include "../security/lazy_importer.h"
 #include "../dependencies/imgui/imgui_internal.h"
 #include <D3dx9tex.h>
 #include <chrono>
