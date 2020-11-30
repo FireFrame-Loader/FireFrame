@@ -27,12 +27,6 @@ if (isset($_POST['delete'])) {
     auth\user\delete($connection, $loader, $_POST['delete']);
 }
 
-if (isset($_POST['add_month']) || isset($_POST['make_life'])) {
-    $life = isset($_POST['make_life']);
-
-    auth\user\update_subscription($connection, $loader, $life ? $_POST['make_life'] : $_POST['add_month'], $life);
-}
-
 if (isset($_POST['reset'])) {
     auth\user\reset_hwid($connection, $loader, $_POST['reset']);
 }
@@ -142,8 +136,6 @@ background-size: auto;
                             <td>
                                 <button name="delete" class="btn btn-danger" value="<?= $name ?>">Delete</button>
                                 <button name="reset" class="btn btn-primary" value="<?= $name ?>">Reset HWID</button>
-                                <button name="add_month" class="btn btn-success" value="<?= $name ?>">Add 1 Month</button>
-                                <button name="make_life" class="btn btn-warning" value="<?= $name ?>">Make Lifetime</button>
                                 <button name="reset_pass" class="btn btn-info" value="<?= $name ?>">Reset Password</button>
                             </td>
                         </tr>

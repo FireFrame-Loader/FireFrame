@@ -28,7 +28,6 @@ namespace loader;
  *
  */
 
-
 function fetch($connection, $username){
     $query = $connection->query('SELECT * FROM loaders WHERE owner=?', [$username]);
 

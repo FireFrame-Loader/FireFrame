@@ -242,13 +242,13 @@ $code_switcher = static function($code){
             <strong>Amount cannot be bigger than 100, expiration limit is 1825!</strong>
           </div>';
         break;
-        case 26:
+        case 26: //deprecated
             return '<div class="alert alert-dismissible alert-success">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>Subscription updated successfully!</strong>
           </div>';
         break;
-        case 27:
+        case 27: //deprecated
             return '<div class="alert alert-dismissible alert-warning">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>User you tried to update, doesnt exist!</strong>
