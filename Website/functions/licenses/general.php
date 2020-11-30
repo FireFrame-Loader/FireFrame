@@ -4,7 +4,7 @@ namespace licenses;
 function delete($connection, $loader, $license){
     $connection->query('DELETE FROM loader_licenses WHERE loader_key=? AND code=?', [$loader['key'], $license]);
 
-    return 0;
+    return 24;
 }
 
 function generate($connection, $loader, /* int */$amount, /* int */$duration, $group = null){
@@ -16,7 +16,7 @@ function generate($connection, $loader, /* int */$amount, /* int */$duration, $g
         $group = 'Default';
 
     if($amount > 100 || $duration > 1825) //not sure if the clientside limit is enough :)
-        return 2;
+        return 25;
 
     $out_arr = [];
 

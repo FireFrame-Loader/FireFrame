@@ -1,8 +1,6 @@
 <?php
 namespace auth\user;
 
-//TODO : fix this broken code system
-
 function add($connection, $loader, $username, $password, $group){
     if(empty($group))
         $group = 'Default';
@@ -24,13 +22,13 @@ function update_subscription($connection, $loader, $username, $life = false){
     if($life){
         $connection->query('UPDATE loader_users SET expires=\'-1\' WHERE loader_key=? AND username=?', [$loader['key'], $username]);
 
-        return 0;
+        return 26;
     }
 
     $query = $connection->query('SELECT expires FROM loader_users WHERE loader_key=? AND username=?', [$loader['key'], $username]);
 
     if($query->num_rows === 0) {
-        return 2;
+        return 27;
     }
 
     $expiry_ts = $query->fetch_assoc()['expires'];
@@ -51,13 +49,13 @@ function update_subscription($connection, $loader, $username, $life = false){
 
     $connection->query('UPDATE loader_users SET expires=? WHERE username=? AND loader_key=?', [$new_expiry_ts, $username, $loader['key']]);
 
-    return 0;
+    return 26;
 }
 
 function delete($connection, $loader, $username){
     $connection->query('DELETE FROM loader_users WHERE username=? AND loader_key=?', [$username, $loader['key']]);
 
-    return 0;
+    return 28;
 }
 
 function reset_hwid($connection, $loader, $username){

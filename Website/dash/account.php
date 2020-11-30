@@ -24,50 +24,25 @@ $expiry = auth\owner\fetch($connection, $username)['expires'];
 
 $account_type = get_account_type($expiry, $username);
 
-$code_switcher = static function($code){
-    switch($code){
-        case 1:
-            return 'old password is wrong';
-
-        case 2:
-            return 'success';
-
-        case 3:
-            return 'password isn\'t strong enough';
-
-        case 4:
-            return 'wrong license code';
-
-        default:
-            return '?';
-    }
-};
-
 if(isset($_POST['oldpassword'], $_POST['newpassword'], $_POST['confirmpassword'])){
-    if($_POST['newpassword'] !== $_POST['confirmpassword']) {
-        die('your password and confirmation password don\'t match');
+    if($_POST['newpassword'] === $_POST['confirmpassword']) {
+        $code = auth\owner\change_password($connection, $username, $_POST['oldpassword'], $_POST['newpassword']);
+    } else {
+        $code = 9;
     }
-
-    $code = auth\owner\change_password($connection, $username, $_POST['oldpassword'], $_POST['newpassword']);
-
-    die($code_switcher($code));
 }
 
 if (isset($_POST['confirmdelpassword'])) {
     $code = auth\owner\delete_account($connection, $username, $_POST['confirmdelpassword']);
 
-    if($code !== 2) {
-        die($code_switcher($code));
+    if($code === 6) {
+        header("Location: " . process_link("logout.php",true));
+        exit;
     }
-
-    header("Location: " . process_link("logout.php",true));
-    exit;
 }
 
 if(isset($_POST['subkey'])) {
     $code = auth\owner\activate_license($connection, $username, $_POST['subkey']);
-
-    die($code_switcher($code));
 }
 
 ?>
@@ -131,6 +106,7 @@ background-size: auto;
 
 <div class="container h-100 d-flex justify-content-center pt-5 ">
     <div class="col-lg-10">
+    <?php if (isset($code)) echo $code_switcher($code); ?>
         <div class="card text-white bg-dark shadow py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">

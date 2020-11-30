@@ -10,7 +10,7 @@ function get_upload_path($name){
 function module_of_owner($connection, $username, $module_uid){
     $query = $connection->query('SELECT owner FROM loader_modules WHERE owner=? AND uid=?', [$username, $module_uid]);
 
-    return $query->num_rows > 0; // check if the user isn't trying to update another module other than his own
+    return $query->num_rows > 0;
 }
 
 function upload($connection, $file, $loader, $module_name, $target_process, $groups){
@@ -26,17 +26,17 @@ function upload($connection, $file, $loader, $module_name, $target_process, $gro
     $file_path = get_upload_path($server_name);
 
     if(empty($file))
-        return 3; //error occurred
+        return 15; //error occurred
 
     $file_name = basename($file['name']);
 
     $file_extension = substr($file_name, strrpos($file_name,'.') + 1);
 
     if($file_extension !== 'dll' || $file['size'] > 8388608) //8mb?
-        return 4;
+        return 16;
 
-    if(!move_uploaded_file($file['tmp_name'], $file_path)) // no perms smh or invalid path?
-        return 3; //error occurred
+    if(@!move_uploaded_file($file['tmp_name'], $file_path)) // no perms smh or invalid path?
+        return 17; //error occurred
 
     file_put_contents($file_path, encryption\encrypt_file($file_path, $server_key));
 
@@ -44,7 +44,7 @@ function upload($connection, $file, $loader, $module_name, $target_process, $gro
         $module_name, $target_process, $groups, $server_name, $server_key, $uid, 0, (string) $loader['key'], $loader['owner']
     ));
 
-    return 5;
+    return 18;
 }
 
 function update($connection, $loader, $uid, array $update_data) {
@@ -53,7 +53,7 @@ function update($connection, $loader, $uid, array $update_data) {
     }
 
     if(!module_of_owner($connection, $loader['owner'], $uid)){
-        return 7;
+        return 19;
     }
 
     $connection->query('UPDATE loader_modules SET `name`=?, process=? WHERE loader_key=? AND uid=?', [$update_data['name'], $update_data['process'], $loader['key'], $uid]);
@@ -65,7 +65,7 @@ function update($connection, $loader, $uid, array $update_data) {
     $file = $update_data['file'];
 
     if (empty($file))
-        return 3;
+        return 15;
 
     unlink($file_path);
 
@@ -74,23 +74,23 @@ function update($connection, $loader, $uid, array $update_data) {
     $file_extension = substr($file_name, strrpos($file_name, '.') + 1);
 
     if ($file_extension !== 'dll' || $_FILES['file']['size'] > 8388608)
-        return 4;
+        return 16;
 
     if(@!move_uploaded_file($file['tmp_name'], $file_path))
-        return 3;
+        return 17;
 
     $encrypted_data = encryption\encrypt_file($file_path, $module_data['server_key']);
 
     file_put_contents($file_path, $encrypted_data);
 
-    return 5;
+    return 18;
 }
 
 function delete($connection, $loader, $uid){
     $module_data = fetch($connection, $loader, $uid);
 
     if($module_data === 0)
-        return 0;
+        return 20;
 
     $server_path = get_upload_path($module_data['server_name']);
 
@@ -98,11 +98,11 @@ function delete($connection, $loader, $uid){
 
     unlink($server_path);
 
-    return 5;
+    return 21;
 }
 
 function pause($connection, $loader, $uid, $pause = true){
     $query = $connection->query('UPDATE loader_modules SET paused=? WHERE loader_key=? AND uid=?', [$pause ? '1' : '0', $loader['key'], $uid]);
 
-    return 5;
+    return 22;
 }

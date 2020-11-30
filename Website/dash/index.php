@@ -13,42 +13,16 @@ $username = $_SESSION['username'];
 
 $loader = loader\fetch($connection, $username);
 
-if ($loader !== 0)
+if ($loader !== 11)
     $_SESSION['loader'] = $loader;
-
-$code_switcher = static function($code){
-    switch($code){
-        case 0:
-            return 'success';
-
-        case 1:
-            return 'loader creation failed';
-
-        case 2:
-            return 'loader name is invalid or user already has a loader';
-
-        case 3:
-            return 'error occurred';
-
-        case 4:
-            return '8mb max';
-
-        default:
-            return '?';
-    }
-};
-
+    
 if(isset($_POST['create_loader'])) {
-    $out = loader\create($connection, $_POST['loader_name'], $username);
-
-    die($code_switcher($out));
+    $code = loader\create($connection, $_POST['loader_name'], $username);
 }
 
 
 if(isset($_POST['process'], $_POST['name'], $_POST['groups'])){
-    $out = module\upload($connection, $_FILES['file'], $loader, $_POST['name'], $_POST['process'], $_POST['groups']);
-
-    die($code_switcher($out));
+    $code = module\upload($connection, $_FILES['file'], $loader, $_POST['name'], $_POST['process'], $_POST['groups']);
 }
 
 
@@ -115,6 +89,7 @@ background-size: auto;
 
 <div class="container h-100 d-flex justify-content-center pt-5">
     <div class="col-lg-10">
+    <?php if (isset($code)) echo $code_switcher($code); ?>
         <div class="card rounded-0 text-white bg-dark">
             <div class="card-header">
                 Manage loader - <?php if(isset($loader['name'])) { echo $loader['name']; } ?>
@@ -135,15 +110,14 @@ background-size: auto;
                         <form class="p-3">
                             <div class="form-group">
                                 <label for="loader_key">Loader key</label>
-                                <input type="text" id="loader_key" name="loader_key" class="form-control" placeholder="<?= $loader['name'] ?>" readonly="readonly">
+                                <input type="text" id="loader_key" name="loader_key" class="form-control" placeholder="<?= $loader['key'] ?>" readonly="readonly">
                             </div>
                         </form>
                         <form method="POST" class="p-3">
                             <div class="form-group">
                                 <label for="loader_name">Loader Name</label>
-                                <input type="text" class="form-control" id="loader_name" name="loader_name" aria-describedby="poo" placeholder="<?= $loader['name'] ?>" required>
+                                <input type="text" class="form-control" id="loader_name" name="loader_name" aria-describedby="poo" placeholder="<?= $loader['name'] ?>">
                             </div>
-                                <!-- <button type="submit" class="btn btn-primary">Rename</button> -->
                             </form>
                         </div>
                         <div class="col-md mr-2">

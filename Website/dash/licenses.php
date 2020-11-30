@@ -91,6 +91,7 @@ background-size: auto;
 
 <div class="container h-100 d-flex justify-content-center pt-5 mb-5">
     <div class="col-lg-10">
+    <?php if (isset($code)) echo $code_switcher($code); ?>
         <div class="card rounded-0 text-white bg-dark">
             <div class="card-header">
                 Licenses

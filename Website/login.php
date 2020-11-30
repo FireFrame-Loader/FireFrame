@@ -10,7 +10,7 @@ if(isset($_POST['username'], $_POST['password'])){
     $data = auth\owner\login($connection, $_POST['username'], $_POST['password']);
 
     if(!is_array($data)){
-        die('Wrong credentials');
+        $code = 1;
     }
 
     $_SESSION = $data;
@@ -57,6 +57,7 @@ background-size: auto;
 
     <div class="container h-100 d-flex justify-content-center mt-5 pt-5">
        <div class="col-lg-4 pt-5">
+            <?php if (isset($code)) echo $code_switcher($code); ?>
             <div class="card rounded-0 text-white bg-dark">
                 <div class="card-header">
                 Login

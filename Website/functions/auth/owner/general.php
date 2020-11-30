@@ -14,7 +14,7 @@ function login( $connection, $username, $password){
     $row_data = fetch($connection, $username);
 
     if($row_data === 0){
-        return 0;
+        return 1;
     }
 
     if(!password_verify($password, $row_data['password'])) {
@@ -36,18 +36,18 @@ function register($connection, $username, $password){
     };
 
     if($owner_already_exists($username)) {
-        return 0;
+        return 2;
     }
 
     if(!validate_password($password)) {
-        return 1;
+        return 3;
     }
 
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     $connection->query('INSERT INTO users(username, password) VALUES(?, ?)', [$username, $hashed_password]);
 
-    return 2;
+    return 4;
 }
 
 #region account
@@ -62,7 +62,7 @@ function change_password($connection, $username, $old_password, $new_password){
 
     $connection->query('UPDATE users SET password=? WHERE username=?', [$hashed_password, $username]);
 
-    return 2;
+    return 5;
 }
 
 function delete_account($connection, $username, $confirm_password){
@@ -86,14 +86,14 @@ function delete_account($connection, $username, $confirm_password){
         $connection->query($query, [$username]);
     }
 
-    return 2;
+    return 6;
 }
 
 function activate_license($connection, $username, $license){
     $query = $connection->query('SELECT `type` FROM licenses WHERE code=?', [$license]);
 
     if($query->num_rows === 0) {
-        return 4;
+        return 7;
     }
 
     $owner_data = fetch($connection, $username);
@@ -118,6 +118,6 @@ function activate_license($connection, $username, $license){
 
     $connection->query('DELETE FROM licenses WHERE code=?', [$license]);
 
-    return 2;
+    return 8;
 }
 #endregion

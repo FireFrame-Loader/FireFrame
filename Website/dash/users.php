@@ -37,29 +37,12 @@ if (isset($_POST['reset'])) {
     auth\user\reset_hwid($connection, $loader, $_POST['reset']);
 }
 
-$code_switcher = static function($code){
-  switch($code){
-      case 1:
-          return 'passwords do not match';
-      case 2:
-          return 'user already exists';
-      case 3:
-          return 'Password should be at least 8 characters in length and should include at least one upper case letter, one number, and one special character.';
-      case 0:
-          return 'success';
-      default:
-          return '?';
-  }
-};
-
 if(isset($_POST['username'], $_POST['password'], $_POST['confirmpassword'])) {
-    if ($_POST['password'] !== $_POST['confirmpassword']) {
-        die("pass mismatch");
+    if ($_POST['password'] === $_POST['confirmpassword']) {
+        $code = auth\user\add($connection, $loader, $_POST['username'], $_POST['password'], $_POST['usergroup']);
+    } else {
+        $code = 9;
     }
-
-    $code = auth\user\add($connection, $loader, $_POST['username'], $_POST['password'], $_POST['usergroup']);
-
-    die($code_switcher($code));
 }
 
 
@@ -128,6 +111,7 @@ background-size: auto;
 
 <div class="container h-100 d-flex justify-content-center pt-5 mb-5">
     <div class="col-lg-10">
+    <?php if (isset($code)) echo $code_switcher($code); ?>
         <div class="card rounded-0 text-white bg-dark">
             <div class="card-header">
                 Users

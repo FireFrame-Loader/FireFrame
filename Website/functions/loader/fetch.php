@@ -33,7 +33,7 @@ function fetch($connection, $username){
     $query = $connection->query('SELECT * FROM loaders WHERE owner=?', [$username]);
 
     if($query->num_rows === 0) {
-        return 0;
+        return 11;
     }
 
     $row_data = $query->fetch_all(1)[0];

@@ -2,17 +2,14 @@
 require 'functions/includes.php';
 
 if(isset($_POST['username'], $_POST['password'], $_POST['confirmpassword'])){
-    if($_POST['password'] !== $_POST['confirmpassword']) {
-        die('password is different from confirm password');
+    if($_POST['password'] === $_POST['confirmpassword']) {
+        $code = auth\owner\register($connection, $_POST['username'], $_POST['password']);
+        if ($code === 4) {
+            header("Location: login.php", false);
+        }
+    } else {
+        $code = 9;
     }
-
-    $code = auth\owner\register($connection, $_POST['username'], $_POST['password']);
-
-    if($code !== 2){
-        die('invalid password \'regex\' or already used name');
-    }
-
-    header('Location: login.php');
 }
 
 ?>
@@ -54,6 +51,7 @@ background-size: auto;
 
     <div class="container h-100 d-flex justify-content-center mt-5 pt-5 ">
         <div class="col-lg-4 pt-5">
+        <?php if (isset($code)) echo $code_switcher($code); ?>
         <div class="alert alert-dismissible alert-warning">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     <strong>Registrations are currently disabled!</strong>

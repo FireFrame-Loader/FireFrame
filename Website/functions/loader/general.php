@@ -17,14 +17,12 @@ function loader_key_structure(){
 
 function create($connection, $loader_name, $username){
 
-    //TODO : restrict loader amount
-
     $loader_name = htmlentities($loader_name);
 
     $user_data = auth\owner\fetch($connection, $username);
 
     if($user_data === 0 || !check_expiry($user_data['expires']) ){
-        return 1;
+        return 12;
     }
 
     $loader_exists = static function($username, $loader_name) use ($connection){
@@ -42,12 +40,12 @@ function create($connection, $loader_name, $username){
     };
 
     if($loader_exists($username, $loader_name)) {
-        return 2;
+        return 13;
     }
 
     $loader_key = loader_key_structure();
 
     $connection->query('INSERT INTO loaders (`name`, loader_key, owner) VALUES(?,?,?)', [$loader_name, $loader_key, $username]);
 
-    return 0;
+    return 14;
 }

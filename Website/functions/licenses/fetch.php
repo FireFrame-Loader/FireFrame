@@ -13,7 +13,7 @@ function fetch($connection, $loader, $license) {
     $query = $connection->query('SELECT * FROM loader_licenses WHERE loader_key=? AND code=?', [$loader['key'], $license]);
 
     if($query->num_rows === 0)
-        return 1;
+        return 23;
 
     return $query->fetch_assoc();
 }
