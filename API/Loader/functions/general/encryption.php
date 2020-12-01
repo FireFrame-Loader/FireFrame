@@ -22,14 +22,6 @@ function decrypt_rsa($cipher_text){
     return $rsa->decrypt($cipher_text);
 }
 
-function create_key_pair(){
-    $rsa = new RSA();
-
-    $keys = $rsa->createKey(); 
-
-    return $keys;
-}
-
 function encrypt_aes($plaintext, $password,$iv = "_FireFrame_") {
     $method = "AES-256-CBC";
     $ciphertext = openssl_encrypt($plaintext, $method, $password, OPENSSL_RAW_DATA, $iv);
