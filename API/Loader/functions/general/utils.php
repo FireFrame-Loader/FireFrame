@@ -18,7 +18,14 @@ function sign_message($message) {
     $gpg = new gnupg();
     $gpg->addsignkey('E7024416A6B8C327A0D75188C6BBA999B2D601AD');
 
-    return $gpg->sign($message);
+    return base64_encode($gpg->sign($message));
+}
+
+function verify_message($message, &$cleartext) {
+    $message = base64_decode($message);
+    putenv('GNUPGHOME=/var/www/.gnupg');
+    $gpg = new gnupg();
+    return $gpg->verify($message,false,$cleartext) !== false;
 }
 
 function contains($needle, $haystack)

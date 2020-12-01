@@ -12,17 +12,9 @@ use phpseclib\Crypt\RSA;
 
 define('CRYPT_RSA_PKCS15_COMPAT', true);
 
-function encrypt($public_key, $plain_text){
-    $rsa = new RSA();
+$private_key = '';
 
-    $rsa->loadKey($public_key);
-
-    $rsa->setEncryptionMode(RSA::PUBLIC_FORMAT_PKCS1);
-
-    return $rsa->encrypt($plain_text);
-}
-
-function decrypt($private_key, $cipher_text){
+function decrypt_rsa($cipher_text){
     $rsa = new RSA();
 
     $rsa->loadKey($private_key);
@@ -33,9 +25,21 @@ function decrypt($private_key, $cipher_text){
 function create_key_pair(){
     $rsa = new RSA();
 
-    $keys = $rsa->createKey(); // ['privatekey' => '?', 'publickey' => '?']
+    $keys = $rsa->createKey(); 
 
     return $keys;
 }
+
+function encrypt_aes($plaintext, $password,$iv = "_FireFrame_") {
+    $method = "AES-256-CBC";
+    $ciphertext = openssl_encrypt($plaintext, $method, $password, OPENSSL_RAW_DATA, $iv);
+   return base64_encode($ciphertext);
+}
+  
+function decrypt_aes($ciphertext, $password, $iv = "_FireFrame_") {
+      $method = "AES-256-CBC";
+      return openssl_decrypt(base64_decode($ciphertext), $method, $password, OPENSSL_RAW_DATA,  $iv);	
+}
+  
 
 ?>
