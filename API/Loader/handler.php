@@ -54,7 +54,7 @@ switch ($command) {
         $session = auth\generate_session($connection, $aes_key);
         die(sign_message(json_encode([
             'error' => false,
-            'data' => json_encode($session)
+            'data' => $session
         ])));
     break;
     case 'login': 
@@ -100,7 +100,7 @@ switch ($command) {
                 auth\add_session_db_identifiers($connection, $data->session_id,$request_data->username,$request_data->loader_key);
                 die(sign_message(general\encrypt_aes(json_encode([
                     'error' => false,
-                    'data' => json_encode($auth_data)
+                    'data' => $auth_data
                     ]),$session_key)));
              break;
         }
@@ -149,7 +149,7 @@ switch ($command) {
                 auth\add_session_db_identifiers($connection, $data->session_id,$request_data->username,$request_data->loader_key);
                 die(sign_message(general\encrypt_aes(json_encode([
                     'error' => false,
-                    'data' => json_encode($register_data)
+                    'data' => $register_data
                     ]),$session_key)));
              break;
         }

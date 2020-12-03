@@ -11,8 +11,6 @@ namespace auth;
 
 use function loader\get_license_info;
 
-use function loader\get_user_groups;
-
 function is_valid_user($connection, $username, $password, $hwid, $loader_key) {
     $owner = \get_loader_owner($connection, $loader_key);
 
@@ -48,12 +46,12 @@ function is_valid_user($connection, $username, $password, $hwid, $loader_key) {
 
     if ($modules !== 0) {
         foreach($modules as $module) {
-            $return_array[] = [
+            $return_modules[] = [
                 'name' => $module['name'],
                 'uid' => $module['uid']
             ];
         }
-        $return_array['modules'] = json_encode($return_modules);
+        $return_array['modules'] = $return_modules;
     }
 
     return $return_array;
@@ -107,12 +105,12 @@ function insert_new_user($connection, $username,$password,$hwid,$license,$loader
 
     if ($modules !== 0) {
         foreach($modules as $module) {
-            $return_array[] = [
+            $return_modules[] = [
                 'name' => $module['name'],
                 'uid' => $module['uid']
             ];
         }
-        $return_array['modules'] = json_encode($return_modules);
+        $return_array['modules'] = $return_modules;
     }
     
     return $return_array;
