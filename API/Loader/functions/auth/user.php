@@ -157,11 +157,30 @@ function redeem_license($connection,$username,$license,$loader_key) {
             array($license_info,time() + $new_expires)
         );   
     }
+
+    $return_array = [
+        'usergroup' => $groups,
+    ];
+
     $groups = json_encode($groups);
+
+    $modules = get_available_modules_list($groups,$loader_key,$owner);
+
+    $return_modules = array();
+
+    if ($modules !== 0) {
+        foreach($modules as $module) {
+            $return_modules[] = [
+                'name' => $module['name'],
+                'uid' => $module['uid']
+            ];
+        }
+        $return_array['modules'] = $return_modules;
+    }
 
     $connection->query('UPDATE loader_users SET usergroup=? WHERE username=? AND loader_key=? AND owner=?',[$groups,$username,$loader_key,$owner]);
 
-    return $groups;
+    return $return_array;
 }
 
 
