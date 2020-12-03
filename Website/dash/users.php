@@ -136,6 +136,7 @@ background-size: auto;
                             <td>
                                 <button name="delete" class="btn btn-danger" value="<?= $name ?>">Delete</button>
                                 <button name="reset" class="btn btn-primary" value="<?= $name ?>">Reset HWID</button>
+                                <button name="manage" class="btn btn-primary" value="<?= $name ?>">Manage groups</button>
                                 <button name="reset_pass" class="btn btn-info" value="<?= $name ?>">Reset Password</button>
                             </td>
                         </tr>

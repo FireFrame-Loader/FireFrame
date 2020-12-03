@@ -177,7 +177,7 @@ switch ($command) {
 
         die(sign_message(general\encrypt_aes(json_encode([
             'error' => false,
-            'data' => json_encode($license_reedem_data)
+            'data' => $license_reedem_data
             ]),$session['enc_key'])));
     break;
     default:

@@ -146,10 +146,8 @@ background-size: auto;
                         </div>
                         <div class="form-group">
                             <label>Usergroup</label>
-                            <input type="text" class="form-control" id="usergroup" name="usergroup" placeholder="Usergroup (Default,VIP)">
+                            <input type="text" class="form-control" id="usergroup" name="usergroup" placeholder="Usergroup">
                         </div>
-                        <small class="text-secondary">If you leave the Usergroup field empty, Default group will be automatically applied.<br>
-                            You can also assign multiple groups to a license by separating the group names with a comma (,).</small>
                         <center>
                             <button type="submit" class="btn btn-light border w-100 mt-2 mb-2">Generate</button>
                         </center>

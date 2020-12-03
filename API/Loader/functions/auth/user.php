@@ -89,26 +89,20 @@ function insert_new_user($connection, $username,$password,$hwid,$license,$loader
     $expires = time() + ($license_info['duration'] * 86400);
     $password = password_hash($password,PASSWORD_DEFAULT);
 
+    $group_array = array(
+        array($license_info['usergroup'],$expires)
+    );
 
-    /* 
+    $group_array = json_encode($group_array);
 
-    $usergroup = json_encode($array) 
-
-    $array = [ - we should probably wrap this around with an another array, so we can have multiple groups x)
-        'group' => $license_info['usergroup'],
-        'expires' => $expires
-    ]
-    
-    */
-
-    $connection->query('INSERT INTO loader_users(username,password,hwid,usergroup,loader_key,owner) VALUES(?,?,?,?,?,?,?)',[$username,$password,$hwid,$usergroup,$loader_key,$owner]);
+    $connection->query('INSERT INTO loader_users(username,password,hwid,usergroup,loader_key,owner) VALUES(?,?,?,?,?,?,?)',[$username,$password,$hwid,$group_array,$loader_key,$owner]);
 
     $modules = get_available_modules_list($license_info['usergroup'],$loader_key,$owner);
 
     $return_modules = array();
 
     $return_array = [
-        'usergroup' => $usergroup, //will be json_encoded; see comment above
+        'usergroup' => $group_array,
     ];
 
     if ($modules !== 0) {
@@ -141,16 +135,35 @@ function redeem_license($connection,$username,$license,$loader_key) {
 
     $new_expires = $license_info['duration'] * 86400;
 
-    /* Check if user already has $license_info['usergroup'], if the user has it, check if the assigned expiration time is expired
-        if expired, set expiration time() + $new_expires
-        if not expired, add $new_expires to the time
+    $query = $connection->query('SELECT usergroup FROM loader_users WHERE username=? AND loader_key=? AND owner=?',[$username,$loader_key,$owner]);
 
-        if user doesnt have the group
-        add the group and assign time() + $new_expires
+    $row_data = $query->fetch_assoc();
 
-        return json_encode(usergroup:expires) array and json_encode(available modules) array - basically like in the funcs above
-    */
+    $groups = $row_data['usergroup'];
 
+    if (strlen($group) > 0) { 
+        $groups = json_decode($groups);
+        foreach($groups as &$group) {
+            if ($group[0] === $license_info['usergroup']) {
+                if ($group[1] > (time() + $new_expires))
+                    $group[1] += $new_expires;
+                else
+                    $group[1] = time() + $new_expires;
+            } else {
+                $groups[] = array($license_info['usergroup'],time() + $new_expires);
+            }
+        }
+
+    } else {
+        $groups = array(
+            array($license_info,time() + $new_expires)
+        );   
+    }
+    $groups = json_encode($groups);
+
+    $connection->query('UPDATE loader_users SET usergroup=? WHERE username=? AND loader_key=? AND owner=?',[$groups,$username,$loader_key,$owner]);
+
+    return $groups;
 }
 
 
