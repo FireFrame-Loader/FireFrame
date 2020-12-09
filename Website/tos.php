@@ -1,16 +1,13 @@
 <?php 
-function is_onion() {
-  $http_host = $_SERVER['HTTP_HOST'];
-  if ($http_host == "etqz5veooa2zlcftxzkbxs6k4kvcbyqfuiq7uesxspwikcwzxamnzsyd.onion")
-      return true;
-  return false;
-}
+function process_link($add, $dash) {
+  $to_add = ($dash ? '/dash/' : '/') . $add;
 
-function process_link($add,$dash) {
-  if(is_onion())
-      return 'http://etqz5veooa2zlcftxzkbxs6k4kvcbyqfuiq7uesxspwikcwzxamnzsyd.onion/' . ($dash ? 'dash/' : '') . $add;
+  $out = '://' . $_SERVER['HTTP_HOST'];
 
-  return 'https://' . ($dash ? 'dash.' : '') . 'firefra.me/' . $add;
+  return (
+      (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] === 'on')
+          ? 'https'.$out : 'http'.$out) .
+      $to_add;
 }
 ?>
 <!DOCTYPE html>

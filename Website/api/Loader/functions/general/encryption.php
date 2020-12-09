@@ -1,23 +1,22 @@
 <?php
 
-/* 
-
-Include phpseclib (http://phpseclib.sourceforge.net/rsa/2.0/examples.html), i had problems doing it on live server
-see /api.firefra.me/error.log thanks
-
-*/
 namespace general;
 
 use phpseclib\Crypt\RSA;
 
 define('CRYPT_RSA_PKCS15_COMPAT', true);
 
-$private_key = '';
+/* 2 varieties, just cuz i can x) */
 
-function decrypt_rsa($cipher_text){
+$private_key_2048 = '';
+
+$private_key_4096 = '';
+
+
+function decrypt_rsa($cipher_text, $use_4096){
     $rsa = new RSA();
 
-    $rsa->loadKey($private_key);
+    $rsa->loadKey(($use_4096 ? $private_key_4096 : $private_key_2048));
 
     return $rsa->decrypt($cipher_text);
 }

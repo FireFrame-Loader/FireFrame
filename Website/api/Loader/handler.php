@@ -1,6 +1,6 @@
 <?php
 
-//TODO : include functions & implement decrypt & encrypt aes
+//TODO : include functions
 
 use function general\sign_message;
 
@@ -50,7 +50,7 @@ if (general\verify_message($data,$cleartext)) {
 
 switch ($command) {
     case 'create_session':
-        $aes_key = general\decrypt_rsa($data->aes_key); //TODO: Decrypt the aes key with RSA private key
+        $aes_key = general\decrypt_rsa($data->aes_key,true); //4096 or 2048 bit private key encryption
         $session = auth\generate_session($connection, $aes_key);
         die(sign_message(json_encode([
             'error' => false,
