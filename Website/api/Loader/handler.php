@@ -90,7 +90,7 @@ switch ($command) {
                 ]),$session_key)));
         }
 
-        $request_data = json_decode(general\aes_decrypt($data->data,$session_key)); 
+        $request_data = json_decode(general\decrypt_aes($data->data,$session_key)); 
 
         $auth_data = auth\is_valid_user($connection, $request_data->username, $request_data->password, $request_data->hwid, $request_data->loader_key);
 
@@ -132,7 +132,7 @@ switch ($command) {
                 ]),$session_key)));
         }
 
-        $request_data = json_decode(general\aes_decrypt($data->data,$session_key)); 
+        $request_data = json_decode(general\decrypt_aes($data->data,$session_key)); 
 
         $register_data = auth\insert_new_user($connection, $request_data->username,$request_data->password,$request_data->hwid,$request_data->license,$request_data->loader_key);
 
@@ -174,7 +174,7 @@ switch ($command) {
                 ]),$session['enc_key'])));
         }
 
-        $request_data = json_decode(general\aes_decrypt($data->data,$session['enc_key'])); 
+        $request_data = json_decode(general\decrypt_aes($data->data,$session['enc_key'])); 
 
         $license_reedem_data = auth\redeem_license($connection,$session['username'],$request_data->license,$session['loader_key']);
 
