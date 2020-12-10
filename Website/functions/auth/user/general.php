@@ -1,6 +1,9 @@
 <?php
 namespace auth\user;
 
+use function loader\get_available_modules_list;
+use function loader\get_license_info;
+
 function add($connection, $loader, $username, $password, $group){
     if(empty($group))
         $group = 'Default';
@@ -35,9 +38,6 @@ function reset_hwid($connection, $loader, $username){
 3 - loader doesnt exist
 4 - loader expired
 */
-
-use function loader\get_available_modules_list;
-use function loader\get_license_info;
 
 function is_valid_user($connection, $username, $password, $hwid, $loader_key) {
     $owner = owner\get_loader_owner($connection, $loader_key); 
