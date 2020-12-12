@@ -116,7 +116,7 @@ background-size: auto;
                         <form method="POST" class="p-3">
                             <div class="form-group">
                                 <label for="loader_name">Loader Name</label>
-                                <input type="text" class="form-control" id="loader_name" name="loader_name" aria-describedby="poo" placeholder="<?= $loader['name'] ?>">
+                                <input type="text" class="form-control" id="loader_name" name="loader_name" aria-describedby="poo" placeholder="<?= $loader['name'] ?>" readonly="readonly">
                             </div>
                             </form>
                         </div>
