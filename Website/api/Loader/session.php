@@ -34,9 +34,8 @@ function get_session_from_id($connection, $session_id,$fetch_all) {
     return $row_data['enc_key'];
 }
 
-function add_session_db_identifiers($connection, $session_id,$username,$owner,$loader_key) {
+function add_session_db_identifiers($connection, $session_id,$username,$loader_key) {
     $connection->query('UPDATE loader_sessions SET username=? WHERE session_id=?',[$username,$session_id]);
-    $connection->query('UPDATE loader_sessions SET owner=? WHERE session_id=?',[$username,$owner]);
     $connection->query('UPDATE loader_sessions SET loader_key=? WHERE session_id=?',[$loader_key,$session_id]);
 }
 

@@ -40,7 +40,7 @@ function reset_hwid($connection, $loader, $username){
 */
 
 function is_valid_user($connection, $username, $password, $hwid, $loader_key) {
-    $owner = owner\get_loader_owner($connection, $loader_key); 
+    $owner = \auth\owner\get_loader_owner($connection, $loader_key); 
 
     if(!is_string($owner))
         return $owner;
@@ -61,7 +61,7 @@ function is_valid_user($connection, $username, $password, $hwid, $loader_key) {
     } else
         $connection->query('UPDATE loader_users SET hwid=? WHERE username=? AND loader_key=? AND owner=?',[$hwid,$username,$loader_key,$owner]);
 
-    $modules = get_available_modules_list($row_data['usergroup'],$loader_key,$owner);
+    $modules = \module\fetch_available_modules($row_data['usergroup'],$loader_key,$owner);
 
     $return_modules = array();
 
@@ -91,7 +91,7 @@ function is_valid_user($connection, $username, $password, $hwid, $loader_key) {
 */
 
 function insert_new_user($connection, $username,$password,$hwid,$license,$loader_key) {
-    $owner = owner\get_loader_owner($connection, $loader_key);
+    $owner = \auth\owner\get_loader_owner($connection, $loader_key);
 
     if(!is_string($owner))
         return $owner;
@@ -101,7 +101,7 @@ function insert_new_user($connection, $username,$password,$hwid,$license,$loader
     if ($query->num_rows > 0)
         return 2;
 
-    $license_info = get_license_info($connection, $license,$loader_key,$owner);
+    $license_info = \licenses\get_license_info($connection, $license,$loader_key,$owner);
 
     if ($license_info === 0)
         return 3;
@@ -117,7 +117,7 @@ function insert_new_user($connection, $username,$password,$hwid,$license,$loader
 
     $connection->query('INSERT INTO loader_users(username,password,hwid,usergroup,loader_key,owner) VALUES(?,?,?,?,?,?,?)',[$username,$password,$hwid,$group_array,$loader_key,$owner]);
 
-    $modules = get_available_modules_list($license_info['usergroup'],$loader_key,$owner);
+    $modules = \module\fetch_available_modules($license_info['usergroup'],$loader_key,$owner);
 
     $return_modules = array();
 
@@ -146,9 +146,9 @@ function insert_new_user($connection, $username,$password,$hwid,$license,$loader
 */
 
 function redeem_license($connection,$username,$license,$loader_key) {
-    $owner = owner\get_loader_owner($connection,$loader_key);
+    $owner = \auth\owner\get_loader_owner($connection,$loader_key);
 
-    $license_info = get_license_info($connection,$license,$loader_key,$owner);
+    $license_info = \licenses\get_license_info($connection,$license,$loader_key,$owner);
 
     if ($license_info === 0)
         return 0;
@@ -161,7 +161,7 @@ function redeem_license($connection,$username,$license,$loader_key) {
 
     $groups = $row_data['usergroup'];
 
-    if (strlen($group) > 0) { 
+    if (strlen($groups) > 0) { 
         $groups = json_decode($groups);
         foreach($groups as &$group) {
             if ($group[0] === $license_info['usergroup']) {
@@ -186,7 +186,7 @@ function redeem_license($connection,$username,$license,$loader_key) {
 
     $groups = json_encode($groups);
 
-    $modules = get_available_modules_list($groups,$loader_key,$owner);
+    $modules = \module\fetch_available_modules($groups,$loader_key,$owner);
 
     $return_modules = array();
 

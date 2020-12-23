@@ -175,8 +175,7 @@ background-size: auto;
                             <label>Usergroup</label>
                             <input type="text" class="form-control" id="usergroup" name="usergroup" placeholder="Usergroup (Default,VIP)">
                         </div>
-                        <small class="text-secondary">If you leave the Usergroup field empty, Default group will be automatically applied.<br>
-                            You can also assign multiple groups to a user by separating the group names with a comma (,).</small>
+                        <small class="text-secondary">If you leave the Usergroup field empty, Default group will be automatically applied.</small>
                         <center>
                             <button type="submit" class="btn btn-light border w-100 mt-2 mb-2">Add User</button>
                         </center>

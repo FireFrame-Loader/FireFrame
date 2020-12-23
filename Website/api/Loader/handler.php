@@ -74,7 +74,7 @@ if (general\verify_message($data,$cleartext)) {
 
 switch ($command) {
     case 'create_session':
-        $aes_key = general\decrypt_rsa($data->aes_key);
+        $aes_key = encryption\decrypt_rsa($data->aes_key);
         $session = auth\generate_session($connection, $aes_key);
         die(sign_message(json_encode([
             'error' => false,
@@ -84,40 +84,40 @@ switch ($command) {
         $session_key = auth\get_session_from_id($connection, $data->session_id, false);
 
         if ($session_key === 0) {
-            die(sign_message(general\encrypt_aes(json_encode([
+            die(sign_message(encryption\encrypt_aes(json_encode([
                 'error' => true,
                 'type' => 'session_expired'
                 ]),$session_key)));
         }
 
-        $request_data = json_decode(general\decrypt_aes($data->data,$session_key)); 
+        $request_data = json_decode(encryption\decrypt_aes($data->data,$session_key)); 
 
-        $auth_data = auth\is_valid_user($connection, $request_data->username, $request_data->password, $request_data->hwid, $request_data->loader_key);
+        $auth_data = \auth\user\is_valid_user($connection, $request_data->username, $request_data->password, $request_data->hwid, $request_data->loader_key);
 
         switch ($auth_data) {
             case 1:
-                die(sign_message(general\encrypt_aes(json_encode([
+                die(sign_message(encryption\encrypt_aes(json_encode([
                     'error' => true,
                     'type' => 'invalid_login_details'
                     ]),$session_key)));
             case 2: 
-                die(sign_message(general\encrypt_aes(json_encode([
+                die(sign_message(encryption\encrypt_aes(json_encode([
                     'error' => true,
                     'type' => 'invalid_hwid'
                     ]),$session_key)));
             case 3: 
-                die(sign_message(general\encrypt_aes(json_encode([
+                die(sign_message(encryption\encrypt_aes(json_encode([
                     'error' => true,
                     'type' => 'loader_doesnt_exist'
                     ]),$session_key)));
             case 4: 
-                die(sign_message(general\encrypt_aes(json_encode([
+                die(sign_message(encryption\encrypt_aes(json_encode([
                     'error' => true,
                     'type' => 'loader_expired'
                     ]),$session_key)));
-            default:
-                auth\add_session_db_identifiers($connection, $data->session_id,$request_data->username,$request_data->loader_key);
-                die(sign_message(general\encrypt_aes(json_encode([
+            default: 
+                \auth\add_session_db_identifiers($connection, $data->session_id,$request_data->username,$request_data->loader_key);
+                die(sign_message(encryption\encrypt_aes(json_encode([
                     'error' => false,
                     'data' => $auth_data
                     ]),$session_key)));
@@ -126,40 +126,40 @@ switch ($command) {
         $session_key = auth\get_session_from_id($connection, $data->session_id,false);
 
         if ($session_key === 0) {
-            die(sign_message(general\encrypt_aes(json_encode([
+            die(sign_message(encryption\encrypt_aes(json_encode([
                 'error' => true,
                 'type' => 'session_expired'
                 ]),$session_key)));
         }
 
-        $request_data = json_decode(general\decrypt_aes($data->data,$session_key)); 
+        $request_data = json_decode(encryption\decrypt_aes($data->data,$session_key)); 
 
-        $register_data = auth\insert_new_user($connection, $request_data->username,$request_data->password,$request_data->hwid,$request_data->license,$request_data->loader_key);
+        $register_data = \auth\user\insert_new_user($connection, $request_data->username,$request_data->password,$request_data->hwid,$request_data->license,$request_data->loader_key);
 
         switch ($register_data) {
             case 0:
-                die(sign_message(general\encrypt_aes(json_encode([
+                die(sign_message(encryption\encrypt_aes(json_encode([
                     'error' => true,
                     'type' => 'loader_doesnt_exist'
                     ]),$session_key)));
             case 1:
-                die(sign_message(general\encrypt_aes(json_encode([
+                die(sign_message(encryption\encrypt_aes(json_encode([
                     'error' => true,
                     'type' => 'loader_expired'
                     ]),$session_key)));
             case 2:
-                die(sign_message(general\encrypt_aes(json_encode([
+                die(sign_message(encryption\encrypt_aes(json_encode([
                     'error' => true,
                     'type' => 'user_already_exists'
                     ]),$session_key)));
             case 3:
-                die(sign_message(general\encrypt_aes(json_encode([
+                die(sign_message(encryption\encrypt_aes(json_encode([
                     'error' => true,
                     'type' => 'invalid_license'
                     ]),$session_key)));
             default:
                 auth\add_session_db_identifiers($connection, $data->session_id,$request_data->username,$request_data->loader_key);
-                die(sign_message(general\encrypt_aes(json_encode([
+                die(sign_message(encryption\encrypt_aes(json_encode([
                     'error' => false,
                     'data' => $register_data
                     ]),$session_key)));
@@ -168,24 +168,24 @@ switch ($command) {
         $session = auth\get_session_from_id($connection,$data->session_id,true);
 
         if ($session === 0) {
-            die(sign_message(general\encrypt_aes(json_encode([
+            die(sign_message(encryption\encrypt_aes(json_encode([
                 'error' => true,
                 'type' => 'session_expired'
                 ]),$session['enc_key'])));
         }
 
-        $request_data = json_decode(general\decrypt_aes($data->data,$session['enc_key'])); 
+        $request_data = json_decode(encryption\decrypt_aes($data->data,$session['enc_key'])); 
 
-        $license_reedem_data = auth\redeem_license($connection,$session['username'],$request_data->license,$session['loader_key']);
+        $license_reedem_data = \auth\user\redeem_license($connection,$session['username'],$request_data->license,$session['loader_key']);
 
         if ($license_reedem_data === 0) {
-            die(sign_message(general\encrypt_aes(json_encode([
+            die(sign_message(encryption\encrypt_aes(json_encode([
                 'error' => true,
                 'type' => 'invalid_license'
             ]),$session['enc_key'])));
         }
 
-        die(sign_message(general\encrypt_aes(json_encode([
+        die(sign_message(encryption\encrypt_aes(json_encode([
             'error' => false,
             'data' => $license_reedem_data
             ]),$session['enc_key'])));
