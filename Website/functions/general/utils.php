@@ -45,7 +45,7 @@ function check_expiry($expiry){
 }
 
 function get_account_type($expiry, $username = null){
-    if($username !== null && $username === 'pest03'  || $username === "denny" || $username === "21dogs" || $username === "FinGu") {
+    if($username !== null && $username === 'pest03'  || $username === "denny" || $username === "FinGu") {
         return 'Admin';
     }
 
