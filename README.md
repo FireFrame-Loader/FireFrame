@@ -4,8 +4,8 @@ FireFrame Loader Base
 
 What's included:
 
-Fully working dashboard (except user group management system)
-Fully working loader API (without module streaming)
+- Fully working dashboard (except user group management system)
+- Fully working loader API (without module streaming)
 
 What needs to be done to make this a fully functional loader:
 
