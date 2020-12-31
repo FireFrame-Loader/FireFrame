@@ -14,6 +14,7 @@ What needs to be done to make this a fully functional loader:
 - Write a server mapper (process imports and reallocations on server) - optional
 
 - NOTE: This isn't going to be a fully secure loader from the start, you still need to account for a lot of things.
+- NOTE: See the Loader folder for some basic understanding of what libraries you should be using
 
 People that worked on this :
 
