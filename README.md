@@ -20,3 +20,6 @@ People that worked on this :
 - FinGu (https://cauth.me - https://discord.gg/qY3qBC6HJa)
 - denny#3999
 - pest03#1841
+
+
+- WARNING: None of us are going to provide any support for this, please don't contact us regarding this.
