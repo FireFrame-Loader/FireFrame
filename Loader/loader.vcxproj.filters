@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="dependencies">
+      <UniqueIdentifier>{d3327268-1701-49fb-993d-596900401044}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\imgui">
+      <UniqueIdentifier>{94e24eec-dc99-4dcc-9232-d423bfea7278}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\imgui\backend">
+      <UniqueIdentifier>{bf8cb8a2-9f2e-4753-95e8-e4d018c707ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{ca97b8cf-0c32-488f-8e9c-8723ef9b6012}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui">
+      <UniqueIdentifier>{29267a8d-5486-48b8-8299-cf991609c677}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="security">
+      <UniqueIdentifier>{c826f41b-96a6-47ca-9434-573f3fdcf5a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\pgp">
+      <UniqueIdentifier>{7792a126-1e0b-4a3a-9f83-5d4c37ca077c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\pgp\rekey">
+      <UniqueIdentifier>{dde8ec1d-2dab-46c6-a8db-55875dc0d531}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\pgp\repgp">
+      <UniqueIdentifier>{d71ca758-b2fe-481e-936f-9fd3cfca3fce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\pgp\rnp">
+      <UniqueIdentifier>{ecfe858b-81f8-408b-9adc-b5febe0306db}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dependencies\imgui\imconfig.h">
+      <Filter>dependencies\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imgui.h">
+      <Filter>dependencies\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imgui_internal.h">
+      <Filter>dependencies\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imstb_rectpack.h">
+      <Filter>dependencies\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imstb_textedit.h">
+      <Filter>dependencies\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imstb_truetype.h">
+      <Filter>dependencies\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backend\imgui_impl_dx9.h">
+      <Filter>dependencies\imgui\backend</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backend\imgui_impl_win32.h">
+      <Filter>dependencies\imgui\backend</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\gui.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\font.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\background.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\time.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="security\lazy_importer.h">
+      <Filter>security</Filter>
+    </ClInclude>
+    <ClInclude Include="security\skcrypt.h">
+      <Filter>security</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\pgp\rnp.h">
+      <Filter>dependencies\pgp</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\pgp\rekey\rnp_key_store.h">
+      <Filter>dependencies\pgp\rekey</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\pgp\repgp\repgp_def.h">
+      <Filter>dependencies\pgp\repgp</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\pgp\rnp\rnp.h">
+      <Filter>dependencies\pgp\rnp</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\pgp\rnp\rnp_def.h">
+      <Filter>dependencies\pgp\rnp</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\pgp\rnp\rnp_err.h">
+      <Filter>dependencies\pgp\rnp</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\pgp\rnp\rnp_sdk.h">
+      <Filter>dependencies\pgp\rnp</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dependencies\imgui\imgui.cpp">
+      <Filter>dependencies\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_demo.cpp">
+      <Filter>dependencies\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_draw.cpp">
+      <Filter>dependencies\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_widgets.cpp">
+      <Filter>dependencies\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\backend\imgui_impl_dx9.cpp">
+      <Filter>dependencies\imgui\backend</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\backend\imgui_impl_win32.cpp">
+      <Filter>dependencies\imgui\backend</Filter>
+    </ClCompile>
+    <ClCompile Include="core\main.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\gui.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
