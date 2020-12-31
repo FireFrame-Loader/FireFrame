@@ -9,11 +9,11 @@ Fully working loader API (without module streaming)
 
 What needs to be done to make this a fully functional loader:
 
-Write your loader to work with the API
-Write module streaming
-Write a server mapper (process imports and reallocations on server) - optional
+- Write your loader to work with the API
+- Write module streaming
+- Write a server mapper (process imports and reallocations on server) - optional
 
-NOTE: This isn't going to be a fully secure loader from the start, you still need to account for a lot of things.
+- NOTE: This isn't going to be a fully secure loader from the start, you still need to account for a lot of things.
 
 People that worked on this :
 
