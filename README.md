@@ -17,6 +17,6 @@ NOTE: This isn't going to be a fully secure loader from the start, you still nee
 
 People that worked on this :
 
-FinGu (https://cauth.me - https://discord.gg/qY3qBC6HJa)
-denny#3999
-pest03#1841
+- FinGu (https://cauth.me - https://discord.gg/qY3qBC6HJa)
+- denny#3999
+- pest03#1841
